@@ -16,12 +16,15 @@ import com.romrell4.tennisladder.model.Player
 import kotlinx.android.synthetic.main.activity_ladder.*
 
 class LadderActivity: AppCompatActivity() {
+    companion object {
+        const val LADDER_EXTRA = "LADDER"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ladder)
 
-        val ladder = intent.getParcelableExtra<Ladder>("LADDER")
+        val ladder = intent.getParcelableExtra<Ladder>(LADDER_EXTRA)
         title = ladder.name
 
         recycler_view.layoutManager = LinearLayoutManager(this)
