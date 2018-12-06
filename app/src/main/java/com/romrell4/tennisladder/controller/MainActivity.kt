@@ -39,9 +39,14 @@ class MainActivity: AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
         }
-        nav_view.setNavigationItemSelectedListener {
-            drawer_layout.closeDrawers()
-            onOptionsItemSelected(it)
+        
+        nav_view.apply {
+            setNavigationItemSelectedListener {
+                drawer_layout.closeDrawers()
+                onOptionsItemSelected(it)
+            }
+            menu.findItem(R.id.nav_menu_login)?.let { logInMenuItem = it }
+            menu.findItem(R.id.nav_menu_logout)?.let { logOutMenuItem = it }
         }
 
         recycler_view.layoutManager = LinearLayoutManager(this)
@@ -61,12 +66,6 @@ class MainActivity: AppCompatActivity() {
         } ?: run {
             onLoggedOut()
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        nav_view.menu.findItem(R.id.nav_menu_login)?.let { logInMenuItem = it }
-        nav_view.menu.findItem(R.id.nav_menu_logout)?.let { logOutMenuItem = it }
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
