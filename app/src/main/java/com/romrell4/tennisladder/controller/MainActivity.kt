@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseApp
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Ladder
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 
 private const val RC_SIGN_IN = 1
 
@@ -39,7 +41,7 @@ class MainActivity: AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
         }
-        
+
         nav_view.apply {
             setNavigationItemSelectedListener {
                 drawer_layout.closeDrawers()
@@ -59,13 +61,13 @@ class MainActivity: AppCompatActivity() {
         )
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         user?.let {
-            onLoggedIn()
+            onLoggedIn(false)
         } ?: run {
-            onLoggedOut()
+            onLoggedOut(false)
         }
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
@@ -103,18 +105,22 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    private fun onLoggedIn() {
+    private fun onLoggedIn(displayToast: Boolean = true) {
         logInMenuItem?.isVisible = false
         logOutMenuItem?.isVisible = true
 
-        //TODO: Update UI
+        user?.displayName.let {
+            nav_view.nav_header_subtitle.text = it
+            if (displayToast) Toast.makeText(this, "Logged in as $it", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun onLoggedOut() {
+    private fun onLoggedOut(displayToast: Boolean = true) {
         logInMenuItem?.isVisible = true
         logOutMenuItem?.isVisible = false
 
-        //TODO: Update UI
+        nav_view.nav_header_subtitle.text = getString(R.string.not_logged_in)
+        if (displayToast) Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
     private inner class LaddersAdapter(var ladders: List<Ladder>):
