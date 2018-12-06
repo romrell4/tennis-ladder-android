@@ -4,4 +4,5 @@
     <string name="login">Log In</string>
     <string name="logout">Log Out</string>
     <string name="not_logged_in">Not Logged In</string>
+    <string name="date_format">%1$s - %2$s</string>
 </resources>

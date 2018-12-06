@@ -21,8 +21,11 @@ import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Ladder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val RC_SIGN_IN = 1
+private val DATE_FORMAT = SimpleDateFormat("MM/dd/yyyy", Locale.US)
 
 class MainActivity: AppCompatActivity() {
     private var logInMenuItem: MenuItem? = null
@@ -54,9 +57,9 @@ class MainActivity: AppCompatActivity() {
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = LaddersAdapter(
             listOf(
-                Ladder(1, "Rebecca's Ladder"),
-                Ladder(2, "Eric's Ladder"),
-                Ladder(3, "Cole's Ladder")
+                Ladder(1, "Rebecca's Ladder", Date(), Date()),
+                Ladder(2, "Eric's Ladder", Date(), Date()),
+                Ladder(3, "Cole's Ladder", Date(), Date())
             )
         )
     }
@@ -79,7 +82,10 @@ class MainActivity: AppCompatActivity() {
             startActivityForResult(
                 AuthUI.getInstance()
                     .createSignInIntentBuilder()
-                    .setAvailableProviders(listOf(AuthUI.IdpConfig.GoogleBuilder().build()))
+                    .setAvailableProviders(listOf(
+                        AuthUI.IdpConfig.GoogleBuilder(),
+                        AuthUI.IdpConfig.EmailBuilder()
+                    ).map { it.build() })
                     .build(), RC_SIGN_IN
             )
             true
@@ -123,21 +129,21 @@ class MainActivity: AppCompatActivity() {
         if (displayToast) Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
-    private inner class LaddersAdapter(var ladders: List<Ladder>):
-        RecyclerView.Adapter<LaddersAdapter.LadderViewHolder>() {
+    private inner class LaddersAdapter(var ladders: List<Ladder>): RecyclerView.Adapter<LaddersAdapter.LadderViewHolder>() {
         override fun getItemCount() = ladders.size
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            LadderViewHolder(layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LadderViewHolder(layoutInflater.inflate(R.layout.card_ladder, parent, false))
 
         override fun onBindViewHolder(holder: LadderViewHolder, position: Int) {
             holder.bind(ladders[position])
         }
 
         private inner class LadderViewHolder(view: View): RecyclerView.ViewHolder(view) {
-            private val textView: TextView = view.findViewById(android.R.id.text1)
+            private val nameText: TextView = view.findViewById(R.id.name_text)
+            private val dateText: TextView = view.findViewById(R.id.date_text)
 
             fun bind(ladder: Ladder) {
-                textView.text = ladder.name
+                nameText.text = ladder.name
+                dateText.text = getString(R.string.date_format, DATE_FORMAT.format(ladder.startDate), DATE_FORMAT.format(ladder.endDate))
                 itemView.setOnClickListener {
                     startActivity(
                         Intent(this@MainActivity, LadderActivity::class.java).putExtra(LadderActivity.LADDER_EXTRA, ladder)
