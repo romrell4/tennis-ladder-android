@@ -1,7 +1,6 @@
 package com.romrell4.tennisladder.controller
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -25,8 +24,7 @@ class LadderActivity: TLActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ladder)
 
-        val ladder = intent.getParcelableExtra<Ladder>(LADDER_EXTRA)
-        title = ladder.name
+        title = intent.getParcelableExtra<Ladder>(LADDER_EXTRA).name
 
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = PlayersAdapter(listOf(
