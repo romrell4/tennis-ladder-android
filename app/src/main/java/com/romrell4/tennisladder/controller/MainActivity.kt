@@ -18,7 +18,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.romrell4.tennisladder.R
-import com.romrell4.tennisladder.TLActivity
+import com.romrell4.tennisladder.support.TLActivity
 import com.romrell4.tennisladder.model.Ladder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*

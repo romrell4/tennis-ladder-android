@@ -1,16 +1,13 @@
 package com.romrell4.tennisladder.controller
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.romrell4.tennisladder.R
-import com.romrell4.tennisladder.TLActivity
+import com.romrell4.tennisladder.support.TLActivity
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Player
 import kotlinx.android.synthetic.main.activity_ladder.*
@@ -32,16 +29,6 @@ class LadderActivity: TLActivity() {
             Player(2, 1, "Eric Romrell", 10),
             Player(3, 1, "Albus Dumbledore", 100)
         ))
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_ladder, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        startActivity(Intent(this, ReportMatchActivity::class.java))
-        return super.onOptionsItemSelected(item)
     }
 
     private inner class PlayersAdapter(val players: List<Player>): RecyclerView.Adapter<PlayersAdapter.PlayerViewHolder>() {
