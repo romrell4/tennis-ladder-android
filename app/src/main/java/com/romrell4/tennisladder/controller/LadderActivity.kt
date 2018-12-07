@@ -11,11 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.TLActivity
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Player
 import kotlinx.android.synthetic.main.activity_ladder.*
 
-class LadderActivity: AppCompatActivity() {
+class LadderActivity: TLActivity() {
     companion object {
         const val LADDER_EXTRA = "LADDER"
     }

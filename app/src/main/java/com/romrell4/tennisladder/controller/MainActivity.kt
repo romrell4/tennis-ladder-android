@@ -18,6 +18,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.TLActivity
 import com.romrell4.tennisladder.model.Ladder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
@@ -27,7 +28,7 @@ import java.util.*
 private const val RC_SIGN_IN = 1
 private val DATE_FORMAT = SimpleDateFormat("MM/dd/yyyy", Locale.US)
 
-class MainActivity: AppCompatActivity() {
+class MainActivity: TLActivity() {
     private var logInMenuItem: MenuItem? = null
     private var logOutMenuItem: MenuItem? = null
     private val user: FirebaseUser?
@@ -39,7 +40,6 @@ class MainActivity: AppCompatActivity() {
 
         FirebaseApp.initializeApp(this)
 
-        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
@@ -80,13 +80,10 @@ class MainActivity: AppCompatActivity() {
         }
         R.id.nav_menu_login -> {
             startActivityForResult(
-                AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(listOf(
-                        AuthUI.IdpConfig.GoogleBuilder(),
-                        AuthUI.IdpConfig.EmailBuilder()
-                    ).map { it.build() })
-                    .build(), RC_SIGN_IN
+                AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(listOf(
+                    AuthUI.IdpConfig.GoogleBuilder(),
+                    AuthUI.IdpConfig.EmailBuilder()
+                ).map { it.build() }).build(), RC_SIGN_IN
             )
             true
         }
