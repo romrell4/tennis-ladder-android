@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,4 +10,207 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/Toolbar" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/center_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
+
+    <ImageView
+        android:id="@+id/me_image"
+        android:layout_width="@dimen/profile_image_full_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/profile_content_description"
+        app:layout_constraintEnd_toStartOf="@+id/center_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:srcCompat="@drawable/ic_default_user" />
+
+    <ImageView
+        android:id="@+id/opponent_image"
+        android:layout_width="@dimen/profile_image_full_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/profile_content_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/center_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:srcCompat="@drawable/ic_default_user" />
+
+    <TextView
+        android:id="@+id/me_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/me_image"
+        app:layout_constraintStart_toStartOf="@+id/me_image"
+        app:layout_constraintTop_toBottomOf="@+id/me_image"
+        tools:text="My Name" />
+
+    <TextView
+        android:id="@+id/opponent_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/opponent_image"
+        app:layout_constraintStart_toStartOf="@+id/opponent_image"
+        app:layout_constraintTop_toBottomOf="@+id/opponent_image"
+        tools:text="Opponent's Name" />
+
+    <TextView
+        android:id="@+id/set1_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/set_1_label"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/one_third_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/me_name_text" />
+
+    <NumberPicker
+        android:id="@+id/winner_set1_picker"
+        android:layout_width="@dimen/picker_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/set1_separator"
+        app:layout_constraintTop_toBottomOf="@+id/set1_label" />
+
+    <TextView
+        android:id="@+id/set1_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_separator"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintEnd_toEndOf="@+id/set1_label"
+        app:layout_constraintStart_toStartOf="@+id/set1_label"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+
+    <NumberPicker
+        android:id="@+id/loser_set1_picker"
+        android:layout_width="@dimen/picker_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintStart_toEndOf="@+id/set1_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/one_third_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".33" />
+
+    <TextView
+        android:id="@+id/set2_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/set_2_label"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_label"
+        app:layout_constraintEnd_toStartOf="@+id/two_thirds_guideline"
+        app:layout_constraintStart_toStartOf="@+id/one_third_guideline"
+        app:layout_constraintTop_toTopOf="@+id/set1_label" />
+
+    <NumberPicker
+        android:id="@+id/winner_set2_picker"
+        android:layout_width="@dimen/picker_width"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintEnd_toStartOf="@+id/set2_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+
+    <TextView
+        android:id="@+id/set2_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_separator"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_separator"
+        app:layout_constraintEnd_toEndOf="@+id/set2_label"
+        app:layout_constraintStart_toStartOf="@+id/set2_label"
+        app:layout_constraintTop_toTopOf="@+id/set1_separator" />
+
+    <NumberPicker
+        android:id="@+id/loser_set2_picker"
+        android:layout_width="@dimen/picker_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintStart_toEndOf="@+id/set2_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/two_thirds_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".67" />
+
+    <TextView
+        android:id="@+id/set3_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/set_3_label"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/two_thirds_guideline"
+        app:layout_constraintTop_toTopOf="@+id/set1_label"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <NumberPicker
+        android:id="@+id/winner_set3_picker"
+        android:layout_width="@dimen/picker_width"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintEnd_toStartOf="@+id/set3_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+
+    <TextView
+        android:id="@+id/set3_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_separator"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_separator"
+        app:layout_constraintEnd_toEndOf="@+id/set3_label"
+        app:layout_constraintStart_toStartOf="@+id/set3_label"
+        app:layout_constraintTop_toTopOf="@+id/set1_separator"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <NumberPicker
+        android:id="@+id/loser_set2_picker2"
+        android:layout_width="@dimen/picker_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintStart_toEndOf="@+id/set3_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+
 </android.support.constraint.ConstraintLayout>

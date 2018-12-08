@@ -12,7 +12,7 @@
         style="@style/Toolbar" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/center_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -27,10 +27,10 @@
         android:layout_marginEnd="8dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/profile_content_description"
-        android:src="@drawable/ic_default_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:srcCompat="@drawable/ic_default_user" />
 
     <TextView
         android:id="@+id/ranking_label"
@@ -41,7 +41,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/ranking_label_text"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/center_guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -54,7 +54,7 @@
         android:layout_marginEnd="8dp"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/center_guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ranking_label"
         tools:text="#20" />
@@ -70,7 +70,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/center_guideline"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
@@ -83,7 +83,7 @@
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/center_guideline"
         app:layout_constraintTop_toBottomOf="@+id/record_label"
         tools:text="14-8" />
 
