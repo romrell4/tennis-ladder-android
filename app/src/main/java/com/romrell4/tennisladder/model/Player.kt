@@ -8,5 +8,8 @@ data class Player(
     val userId: Int,
     val ladderId: Int,
     val name: String,
-    val score: Int
+    val score: Int,
+    val ranking: Int,
+    val wins: Int,
+    val losses: Int
 ): Parcelable

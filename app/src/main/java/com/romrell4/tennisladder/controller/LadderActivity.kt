@@ -26,9 +26,10 @@ class LadderActivity: TLActivity() {
 
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = PlayersAdapter(listOf(
-            Player(1, 1, "Rebecca Bean", 30),
-            Player(2, 1, "Eric Romrell", 10),
-            Player(3, 1, "Albus Dumbledore", 100)
+            Player(3, 1, "Albus Dumbledore", 100, 1, 4, 0),
+            Player(1, 1, "Rebecca Bean", 30, 2, 3, 0),
+            Player(2, 1, "Eric Romrell", 10, 3, 2, 2),
+            Player(4, 1, "Jessica Romrell", 10, 3, 1, 1)
         ))
     }
 

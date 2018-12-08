@@ -57,9 +57,7 @@ class MainActivity: TLActivity() {
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = LaddersAdapter(
             listOf(
-                Ladder(1, "Rebecca's Ladder", Date(), Date()),
-                Ladder(2, "Eric's Ladder", Date(), Date()),
-                Ladder(3, "Cole's Ladder", Date(), Date())
+                Ladder(1, "Cole's Ladder", Date(), Date())
             )
         )
     }
