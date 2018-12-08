@@ -19,9 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.LadderActivity" />
+        <activity android:name=".controller.PlayerActivity" />
         <activity
             android:name=".controller.ReportMatchActivity"
             android:label="Report a Match" />
-        <activity android:name=".controller.PlayerActivity"></activity>
     </application>
 </manifest>
