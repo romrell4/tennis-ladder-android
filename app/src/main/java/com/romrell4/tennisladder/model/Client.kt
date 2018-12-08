@@ -1,5 +1,6 @@
 package com.romrell4.tennisladder.model
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
@@ -28,7 +29,17 @@ class Client {
 					.client(OkHttpClient.Builder()
 						.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 						.addInterceptor { chain ->
-							chain.proceed(chain.request().newBuilder().apply { FirebaseAuth.getInstance().currentUser?.let { addHeader("Authorization", it.uid) } }.build())
+							val requestBuilder = chain.request().newBuilder()
+
+							//If the user is logged in, attach a token to the request
+							FirebaseAuth.getInstance().currentUser?.let {
+								Tasks.await(it.getIdToken(true)).token?.let {
+									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
+								} ?: throw Exception("Unable to retrieve token")
+							} ?: run {
+								//If the user isn't logged in, let them call the public endpoints
+								chain.proceed(requestBuilder.build())
+							}
 						}
 						.build()
 					)
@@ -39,7 +50,7 @@ class Client {
 
 	interface Api {
 		@POST("users")
-		fun login(): Call<Unit>
+		fun login(): Call<User>
 
 		@GET("ladders")
 		fun getLadders(): Call<List<Ladder>>
