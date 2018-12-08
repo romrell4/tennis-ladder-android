@@ -11,4 +11,5 @@
     <string name="report_match_button_text">Report a Match</string>
     <string name="match_history_label_text">Match History</string>
     <string name="no_matches_text">This player hasn\'t played any matches in this ladder yet. Please check back later.</string>
+    <string name="profile_content_description">Profile picture</string>
 </resources>
