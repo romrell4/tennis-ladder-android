@@ -9,6 +9,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 class Client {
 	companion object {
@@ -37,6 +38,9 @@ class Client {
 	}
 
 	interface Api {
+		@POST("users")
+		fun login(): Call<Unit>
+
 		@GET("ladders")
 		fun getLadders(): Call<List<Ladder>>
 	}
