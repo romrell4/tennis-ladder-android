@@ -4,4 +4,8 @@
     <string name="logout">Log Out</string>
     <string name="not_logged_in">Not Logged In</string>
     <string name="date_format">%1$s - %2$s</string>
+    <string name="ranking_label_text">Current Ranking:</string>
+    <string name="record_label_text">Current Record:</string>
+    <string name="report_match_button_text">Report a Match</string>
+    <string name="match_history_label_text">Match History</string>
 </resources>

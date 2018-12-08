@@ -1,5 +1,6 @@
 package com.romrell4.tennisladder.controller
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_ladder.*
 
 class LadderActivity: TLActivity() {
     companion object {
-        const val LADDER_EXTRA = "LADDER"
+        const val LADDER_EXTRA = "ladder"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +46,9 @@ class LadderActivity: TLActivity() {
             fun bind(player: Player) {
                 nameTextView.text = player.name
                 scoreTextView.text = player.score.toString()
+                itemView.setOnClickListener {
+                    startActivity(Intent(this@LadderActivity, PlayerActivity::class.java).putExtra(PlayerActivity.PLAYER_EXTRA, player))
+                }
             }
         }
     }
