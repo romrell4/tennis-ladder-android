@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="profile_image_card_size">60dp</dimen>
+    <dimen name="profile_image_full_size">120dp</dimen>
+</resources>
