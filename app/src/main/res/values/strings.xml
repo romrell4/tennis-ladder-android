@@ -17,4 +17,5 @@
     <string name="set_2_label">Set 2</string>
     <string name="set_3_label">Set 3</string>
     <string name="report_instructions">Please report the scores from your perspective. For example, if you lost 6-0, 6-0, report 0-6, 0-6. If you did not play a third set (or tiebreak), leave the scores at 0-0.</string>
+    <string name="submit">Submit</string>
 </resources>

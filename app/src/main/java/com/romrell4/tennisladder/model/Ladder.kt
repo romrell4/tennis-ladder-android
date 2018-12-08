@@ -6,8 +6,8 @@ import java.util.*
 
 @Parcelize
 data class Ladder(
-    val id: Int,
-    val name: String,
-    val startDate: Date,
-    val endDate: Date
+	val id: Int,
+	val name: String,
+	val startDate: Date,
+	val endDate: Date
 ): Parcelable

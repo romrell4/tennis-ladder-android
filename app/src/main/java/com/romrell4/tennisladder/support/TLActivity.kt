@@ -7,13 +7,13 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 @SuppressLint("Registered")
 open class TLActivity: AppCompatActivity() {
-    override fun setTitle(title: CharSequence?) {
-        supportActionBar?.title = title
-    }
+	override fun setTitle(title: CharSequence?) {
+		supportActionBar?.title = title
+	}
 
-    override fun setContentView(@LayoutRes layoutResID: Int) {
-        val view = layoutInflater.inflate(layoutResID, null)
-        setSupportActionBar(view.toolbar)
-        super.setContentView(view)
-    }
+	override fun setContentView(@LayoutRes layoutResID: Int) {
+		val view = layoutInflater.inflate(layoutResID, null)
+		setSupportActionBar(view.toolbar)
+		super.setContentView(view)
+	}
 }

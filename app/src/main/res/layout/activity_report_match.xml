@@ -98,7 +98,7 @@
     <NumberPicker
         android:id="@+id/winner_set1_picker"
         android:layout_width="@dimen/picker_width"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/set1_separator"
@@ -118,7 +118,7 @@
     <NumberPicker
         android:id="@+id/loser_set1_picker"
         android:layout_width="@dimen/picker_width"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
         app:layout_constraintStart_toEndOf="@+id/set1_separator"
@@ -148,7 +148,7 @@
     <NumberPicker
         android:id="@+id/winner_set2_picker"
         android:layout_width="@dimen/picker_width"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
         app:layout_constraintEnd_toStartOf="@+id/set2_separator"
@@ -168,7 +168,7 @@
     <NumberPicker
         android:id="@+id/loser_set2_picker"
         android:layout_width="@dimen/picker_width"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
         app:layout_constraintStart_toEndOf="@+id/set2_separator"
@@ -199,7 +199,7 @@
     <NumberPicker
         android:id="@+id/winner_set3_picker"
         android:layout_width="@dimen/picker_width"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
         app:layout_constraintEnd_toStartOf="@+id/set3_separator"
@@ -218,12 +218,26 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <NumberPicker
-        android:id="@+id/loser_set2_picker2"
+        android:id="@+id/loser_set3_picker"
         android:layout_width="@dimen/picker_width"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
         app:layout_constraintStart_toEndOf="@+id/set3_separator"
         app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorAccent"
+        android:text="@string/submit"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
