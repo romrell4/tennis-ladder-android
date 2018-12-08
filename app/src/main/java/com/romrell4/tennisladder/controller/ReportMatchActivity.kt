@@ -1,10 +1,13 @@
 package com.romrell4.tennisladder.controller
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.support.TLActivity
 
-class ReportMatchActivity: AppCompatActivity() {
+class ReportMatchActivity: TLActivity() {
+    companion object {
+        const val PLAYER_EXTRA = "match-player"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

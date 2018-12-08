@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
@@ -21,6 +20,7 @@ import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.support.TLActivity
 import com.romrell4.tennisladder.model.Ladder
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.card_ladder.view.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -133,8 +133,8 @@ class MainActivity: TLActivity() {
         }
 
         private inner class LadderViewHolder(view: View): RecyclerView.ViewHolder(view) {
-            private val nameText: TextView = view.findViewById(R.id.name_text)
-            private val dateText: TextView = view.findViewById(R.id.date_text)
+            private val nameText = view.name_text
+            private val dateText = view.date_text
 
             fun bind(ladder: Ladder) {
                 nameText.text = ladder.name

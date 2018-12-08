@@ -6,12 +6,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.support.TLActivity
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Player
 import kotlinx.android.synthetic.main.activity_ladder.*
+import kotlinx.android.synthetic.main.card_player.view.*
 
 class LadderActivity: TLActivity() {
     companion object {
@@ -41,12 +41,12 @@ class LadderActivity: TLActivity() {
         }
 
         private inner class PlayerViewHolder(view: View): RecyclerView.ViewHolder(view) {
-            private val nameTextView: TextView = view.findViewById(R.id.name_text)
-            private val scoreTextView: TextView = view.findViewById(R.id.score_text)
+            private val nameText = view.name_text
+            private val scoreText = view.score_text
 
             fun bind(player: Player) {
-                nameTextView.text = player.name
-                scoreTextView.text = player.score.toString()
+                nameText.text = player.name
+                scoreText.text = player.score.toString()
                 itemView.setOnClickListener {
                     startActivity(Intent(this@LadderActivity, PlayerActivity::class.java).putExtra(PlayerActivity.PLAYER_EXTRA, player))
                 }
