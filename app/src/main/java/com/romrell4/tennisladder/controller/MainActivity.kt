@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val RC_SIGN_IN = 1
-private val DATE_FORMAT = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 
 class MainActivity: TLActivity() {
 	private var logInMenuItem: MenuItem? = null
