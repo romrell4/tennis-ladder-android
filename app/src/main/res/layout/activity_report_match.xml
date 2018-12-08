@@ -69,18 +69,31 @@
         tools:text="Opponent's Name" />
 
     <TextView
-        android:id="@+id/set1_label"
+        android:id="@+id/report_instructions_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/report_instructions"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/me_name_text" />
+
+    <TextView
+        android:id="@+id/set1_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="@string/set_1_label"
         android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/one_third_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/me_name_text" />
+        app:layout_constraintTop_toBottomOf="@+id/report_instructions_label" />
 
     <NumberPicker
         android:id="@+id/winner_set1_picker"
