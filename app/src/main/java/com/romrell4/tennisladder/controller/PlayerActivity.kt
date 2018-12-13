@@ -37,7 +37,6 @@ class PlayerActivity: TLActivity() {
 		recycler_view.apply {
 			layoutManager = LinearLayoutManager(this@PlayerActivity)
 			adapter = MatchAdapter(
-//                emptyList()
 				listOf(
 					Match(0, 0, Date(), Player(0, 0, "Tester", 0, 0, 0, 0), player, 6, 4, 6, 2),
 					Match(0, 0, Date(), player, Player(0, 0, "Tester", 0, 0, 0, 0), 6, 4, 6, 2)
@@ -45,14 +44,25 @@ class PlayerActivity: TLActivity() {
 			)
 		}
 
+		report_match_button.setOnClickListener {
+			startActivityForResult(Intent(this@PlayerActivity, ReportMatchActivity::class.java).putExtra(ReportMatchActivity.PLAYER_EXTRA, player), ReportMatchActivity.RC_MATCH_REPORTED)
+		}
+
+		loadMatches()
+	}
+
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		if (requestCode == ReportMatchActivity.RC_MATCH_REPORTED) {
+			loadMatches()
+		}
+		super.onActivityResult(requestCode, resultCode, data)
+	}
+
+	private fun loadMatches() {
 		Timer("Test", false).schedule(1000) {
 			runOnUiThread {
 				view_switcher.displayedChild = VS_LIST_INDEX
 			}
-		}
-
-		report_match_button.setOnClickListener {
-			startActivity(Intent(this@PlayerActivity, ReportMatchActivity::class.java).putExtra(ReportMatchActivity.PLAYER_EXTRA, player))
 		}
 	}
 

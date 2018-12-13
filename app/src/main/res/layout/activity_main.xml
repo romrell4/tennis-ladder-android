@@ -17,16 +17,27 @@
             android:id="@+id/toolbar"
             style="@style/Toolbar" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <ViewSwitcher
+            android:id="@+id/view_switcher"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            tools:listitem="@layout/card_ladder" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/card_ladder" />
+        </ViewSwitcher>
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.NavigationView

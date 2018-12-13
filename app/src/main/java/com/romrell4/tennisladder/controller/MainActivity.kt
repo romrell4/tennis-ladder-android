@@ -16,9 +16,12 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
-import com.romrell4.tennisladder.support.TLActivity
+import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
+import com.romrell4.tennisladder.support.SuccessCallback
+import com.romrell4.tennisladder.support.TLActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.card_ladder.view.*
 import kotlinx.android.synthetic.main.nav_header.view.*
@@ -26,11 +29,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val RC_SIGN_IN = 1
-private val DATE_FORMAT = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+private const val VS_LIST_INDEX = 1
+private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 
 class MainActivity: TLActivity() {
 	private var logInMenuItem: MenuItem? = null
 	private var logOutMenuItem: MenuItem? = null
+	private val adapter = LaddersAdapter()
 	private val user: FirebaseUser?
 		get() = FirebaseAuth.getInstance().currentUser
 
@@ -55,11 +60,9 @@ class MainActivity: TLActivity() {
 		}
 
 		recycler_view.layoutManager = LinearLayoutManager(this)
-		recycler_view.adapter = LaddersAdapter(
-			listOf(
-				Ladder(1, "Cole's Ladder", Date(), Date())
-			)
-		)
+		recycler_view.adapter = adapter
+
+		loadLadders()
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -78,10 +81,13 @@ class MainActivity: TLActivity() {
 		}
 		R.id.nav_menu_login -> {
 			startActivityForResult(
-				AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(listOf(
-					AuthUI.IdpConfig.GoogleBuilder(),
-					AuthUI.IdpConfig.EmailBuilder()
-				).map { it.build() }).build(), RC_SIGN_IN
+				AuthUI.getInstance().createSignInIntentBuilder()
+					.setLogo(R.drawable.ic_tennis_ladder)
+					.setIsSmartLockEnabled(!BuildConfig.DEBUG)
+					.setAvailableProviders(listOf(
+						AuthUI.IdpConfig.GoogleBuilder(),
+						AuthUI.IdpConfig.EmailBuilder()
+					).map { it.build() }).build(), RC_SIGN_IN
 			)
 			true
 		}
@@ -106,6 +112,15 @@ class MainActivity: TLActivity() {
 		}
 	}
 
+	private fun loadLadders() {
+		Client.api.getLadders().enqueue(object: SuccessCallback<List<Ladder>>(this) {
+			override fun onSuccess(data: List<Ladder>) {
+				view_switcher.displayedChild = VS_LIST_INDEX
+				adapter.ladders = data
+			}
+		})
+	}
+
 	private fun onLoggedIn(displayToast: Boolean = true) {
 		logInMenuItem?.isVisible = false
 		logOutMenuItem?.isVisible = true
@@ -124,7 +139,7 @@ class MainActivity: TLActivity() {
 		if (displayToast) Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
 	}
 
-	private inner class LaddersAdapter(var ladders: List<Ladder>): RecyclerView.Adapter<LaddersAdapter.LadderViewHolder>() {
+	private inner class LaddersAdapter(var ladders: List<Ladder> = emptyList()): RecyclerView.Adapter<LaddersAdapter.LadderViewHolder>() {
 		override fun getItemCount() = ladders.size
 		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LadderViewHolder(layoutInflater.inflate(R.layout.card_ladder, parent, false))
 

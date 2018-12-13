@@ -1,5 +1,6 @@
 package com.romrell4.tennisladder.model
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
@@ -9,6 +10,8 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 class Client {
 	companion object {
@@ -27,7 +30,19 @@ class Client {
 					.client(OkHttpClient.Builder()
 						.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 						.addInterceptor { chain ->
-							chain.proceed(chain.request().newBuilder().apply { FirebaseAuth.getInstance().currentUser?.let { addHeader("Authorization", it.uid) } }.build())
+							val requestBuilder = chain.request().newBuilder()
+
+							//If the user is logged in, attach a token to the request
+							FirebaseAuth.getInstance().currentUser?.let {
+								Tasks.await(it.getIdToken(true)).token?.let {
+									//This line will allow you to view and copy the token, for debug purposes
+//									println(it)
+									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
+								} ?: throw Exception("Unable to retrieve token")
+							} ?: run {
+								//If the user isn't logged in, let them call the public endpoints
+								chain.proceed(requestBuilder.build())
+							}
 						}
 						.build()
 					)
@@ -39,5 +54,8 @@ class Client {
 	interface Api {
 		@GET("ladders")
 		fun getLadders(): Call<List<Ladder>>
+
+		@GET("ladders/{ladderId}/players")
+		fun getPlayers(@Path("ladderId") ladderId: String)
 	}
 }
