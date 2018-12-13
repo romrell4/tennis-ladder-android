@@ -23,7 +23,7 @@ class Client {
 						GsonConverterFactory.create(
 							GsonBuilder()
 								.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-								.setDateFormat("yyyy-MM-dd HH:mm:ss")
+								.setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 								.create()
 						)
 					)

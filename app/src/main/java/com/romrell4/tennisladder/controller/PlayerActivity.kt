@@ -24,7 +24,6 @@ private const val VS_LIST_INDEX = 1
 
 class PlayerActivity: TLActivity() {
 	companion object {
-		const val LADDER_EXTRA = "ladder"
 		const val ME_EXTRA = "me"
 		const val PLAYER_EXTRA = "player"
 	}
@@ -72,8 +71,9 @@ class PlayerActivity: TLActivity() {
 	private fun loadMatches() {
 		Client.api.getMatches(player.ladderId, player.userId).enqueue(object: SuccessCallback<List<Match>>(this) {
 			override fun onSuccess(data: List<Match>) {
-				adapter.list = data
+				//TODO: Fix bug where this never shows data
 				view_switcher.displayedChild = VS_LIST_INDEX
+				adapter.list = data
 			}
 		})
 	}
