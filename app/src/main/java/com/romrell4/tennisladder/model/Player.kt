@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Player(
-	val userId: Int,
+	val userId: String,
 	val ladderId: Int,
 	val name: String,
 	val score: Int,

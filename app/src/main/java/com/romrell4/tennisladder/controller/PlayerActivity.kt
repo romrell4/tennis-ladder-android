@@ -7,8 +7,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.model.Client
+import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
+import com.romrell4.tennisladder.support.Adapter
+import com.romrell4.tennisladder.support.SuccessCallback
 import com.romrell4.tennisladder.support.TLActivity
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.card_match.view.*
@@ -20,32 +24,38 @@ private const val VS_LIST_INDEX = 1
 
 class PlayerActivity: TLActivity() {
 	companion object {
+		const val ME_EXTRA = "me"
 		const val PLAYER_EXTRA = "player"
 	}
 
+	private var me: Player? = null
 	private lateinit var player: Player
+	private val adapter = MatchAdapter()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_player)
 
+		me = intent.getParcelableExtra(ME_EXTRA)
 		player = intent.getParcelableExtra(PLAYER_EXTRA)
+
 		title = player.name
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
 		recycler_view.apply {
 			layoutManager = LinearLayoutManager(this@PlayerActivity)
-			adapter = MatchAdapter(
-				listOf(
-					Match(0, 0, Date(), Player(0, 0, "Tester", 0, 0, 0, 0), player, 6, 4, 6, 2),
-					Match(0, 0, Date(), player, Player(0, 0, "Tester", 0, 0, 0, 0), 6, 4, 6, 2)
-				)
-			)
+			adapter = MatchAdapter()
 		}
 
+		//TODO: GONE button if they clicked on themselves
 		report_match_button.setOnClickListener {
-			startActivityForResult(Intent(this@PlayerActivity, ReportMatchActivity::class.java).putExtra(ReportMatchActivity.PLAYER_EXTRA, player), ReportMatchActivity.RC_MATCH_REPORTED)
+			startActivityForResult(
+				Intent(this@PlayerActivity, ReportMatchActivity::class.java)
+					.putExtra(ReportMatchActivity.ME_EXTRA, me)
+					.putExtra(ReportMatchActivity.OPPONENT_EXTRA, player)
+				, ReportMatchActivity.RC_MATCH_REPORTED
+			)
 		}
 
 		loadMatches()
@@ -59,26 +69,22 @@ class PlayerActivity: TLActivity() {
 	}
 
 	private fun loadMatches() {
-		Timer("Test", false).schedule(1000) {
-			runOnUiThread {
+		Client.api.getMatches(player.ladderId, player.userId).enqueue(object: SuccessCallback<List<Match>>(this) {
+			override fun onSuccess(data: List<Match>) {
+				//TODO: Fix bug where this never shows data
 				view_switcher.displayedChild = VS_LIST_INDEX
+				adapter.list = data
 			}
-		}
+		})
 	}
 
-	private inner class MatchAdapter(private val matches: List<Match>): RecyclerView.Adapter<MatchAdapter.BaseMatchViewHolder>() {
-		override fun getItemCount() = max(matches.size, 1)
-		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-			if (matches.isEmpty()) EmptyViewHolder(layoutInflater.inflate(R.layout.card_no_matches, parent, false))
-			else MatchViewHolder(layoutInflater.inflate(R.layout.card_match, parent, false))
-
-		override fun onBindViewHolder(viewHolder: BaseMatchViewHolder, position: Int) {
-			(viewHolder as? MatchViewHolder)?.bind(matches[position])
+	private inner class MatchAdapter: Adapter<Match>(this, R.string.no_matches_text) {
+		override fun createViewHolder(parent: ViewGroup) = MatchViewHolder(layoutInflater.inflate(R.layout.card_match, parent, false))
+		override fun bind(viewHolder: RecyclerView.ViewHolder, item: Match) {
+			(viewHolder as? MatchViewHolder)?.bind(item)
 		}
 
-		private abstract inner class BaseMatchViewHolder(view: View): RecyclerView.ViewHolder(view)
-		private inner class EmptyViewHolder(view: View): BaseMatchViewHolder(view)
-		private inner class MatchViewHolder(view: View): BaseMatchViewHolder(view) {
+		private inner class MatchViewHolder(view: View): RecyclerView.ViewHolder(view) {
 			private val nameText = view.name_text
 			private val scoreText = view.score_text
 

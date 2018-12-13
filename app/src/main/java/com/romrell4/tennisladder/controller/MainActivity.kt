@@ -20,6 +20,7 @@ import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
+import com.romrell4.tennisladder.support.Adapter
 import com.romrell4.tennisladder.support.SuccessCallback
 import com.romrell4.tennisladder.support.TLActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +36,7 @@ private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 class MainActivity: TLActivity() {
 	private var logInMenuItem: MenuItem? = null
 	private var logOutMenuItem: MenuItem? = null
-	private val adapter = LaddersAdapter()
+	private val adapter = LadderAdapter()
 	private val user: FirebaseUser?
 		get() = FirebaseAuth.getInstance().currentUser
 
@@ -116,7 +117,7 @@ class MainActivity: TLActivity() {
 		Client.api.getLadders().enqueue(object: SuccessCallback<List<Ladder>>(this) {
 			override fun onSuccess(data: List<Ladder>) {
 				view_switcher.displayedChild = VS_LIST_INDEX
-				adapter.ladders = data
+				adapter.list = data
 			}
 		})
 	}
@@ -139,12 +140,10 @@ class MainActivity: TLActivity() {
 		if (displayToast) Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
 	}
 
-	private inner class LaddersAdapter(var ladders: List<Ladder> = emptyList()): RecyclerView.Adapter<LaddersAdapter.LadderViewHolder>() {
-		override fun getItemCount() = ladders.size
-		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LadderViewHolder(layoutInflater.inflate(R.layout.card_ladder, parent, false))
-
-		override fun onBindViewHolder(holder: LadderViewHolder, position: Int) {
-			holder.bind(ladders[position])
+	private inner class LadderAdapter: Adapter<Ladder>(this, R.string.no_ladders_text) {
+		override fun createViewHolder(parent: ViewGroup) = LadderViewHolder(layoutInflater.inflate(R.layout.card_ladder, parent, false))
+		override fun bind(viewHolder: RecyclerView.ViewHolder, item: Ladder) {
+			(viewHolder as? LadderViewHolder)?.bind(item)
 		}
 
 		private inner class LadderViewHolder(view: View): RecyclerView.ViewHolder(view) {
