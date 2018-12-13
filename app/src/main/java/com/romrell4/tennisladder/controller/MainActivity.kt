@@ -18,14 +18,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
-import com.romrell4.tennisladder.support.TLActivity
+import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
+import com.romrell4.tennisladder.support.SuccessCallback
+import com.romrell4.tennisladder.support.TLActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.card_ladder.view.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.concurrent.schedule
 
 private const val RC_SIGN_IN = 1
 private const val VS_LIST_INDEX = 1
@@ -112,14 +113,12 @@ class MainActivity: TLActivity() {
 	}
 
 	private fun loadLadders() {
-		Timer("").schedule(1000) {
-			runOnUiThread {
+		Client.api.getLadders().enqueue(object: SuccessCallback<List<Ladder>>(this) {
+			override fun onSuccess(data: List<Ladder>) {
 				view_switcher.displayedChild = VS_LIST_INDEX
-				adapter.ladders = listOf(
-					Ladder(1, "Cole's Ladder", Date(), Date())
-				)
+				adapter.ladders = data
 			}
-		}
+		})
 	}
 
 	private fun onLoggedIn(displayToast: Boolean = true) {

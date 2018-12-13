@@ -11,6 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 class Client {
 	companion object {
@@ -34,6 +35,8 @@ class Client {
 							//If the user is logged in, attach a token to the request
 							FirebaseAuth.getInstance().currentUser?.let {
 								Tasks.await(it.getIdToken(true)).token?.let {
+									//This line will allow you to view and copy the token, for debug purposes
+//									println(it)
 									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
 								} ?: throw Exception("Unable to retrieve token")
 							} ?: run {
@@ -49,10 +52,10 @@ class Client {
 	}
 
 	interface Api {
-		@POST("users")
-		fun login(): Call<User>
-
 		@GET("ladders")
 		fun getLadders(): Call<List<Ladder>>
+
+		@GET("ladders/{ladderId}/players")
+		fun getPlayers(@Path("ladderId") ladderId: String)
 	}
 }
