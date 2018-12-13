@@ -19,26 +19,26 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 private const val VS_LIST_INDEX = 1
-private const val RC_MATCH_REPORTED = 1
 
 class LadderActivity: TLActivity() {
 	companion object {
 		const val LADDER_EXTRA = "ladder"
 	}
 
+	private lateinit var ladder: Ladder
 	private val adapter = PlayersAdapter()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_ladder)
 
-		val ladder = intent.getParcelableExtra<Ladder>(LADDER_EXTRA)
+		ladder = intent.getParcelableExtra(LADDER_EXTRA)
 		title = ladder.name
 
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
 
-		loadPlayers(ladder.id)
+		loadPlayers()
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,20 +48,30 @@ class LadderActivity: TLActivity() {
 
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.report_option -> {
+			//TODO: Filter out yourself
 			val players = adapter.players
-			var selectedPlayer = adapter.players[0]
+			var selectedPlayer: Player? = null
 			AlertDialog.Builder(this)
-				.setSingleChoiceItems(players.map { it.name }.toTypedArray(), 0) { _, index ->
+				.setSingleChoiceItems(players.map { it.name }.toTypedArray(), -1) { _, index ->
 					selectedPlayer = players[index]
 				}.setPositiveButton("Select") { _, _ ->
-					startActivityForResult(Intent(this@LadderActivity, ReportMatchActivity::class.java).putExtra(ReportMatchActivity.PLAYER_EXTRA, selectedPlayer), RC_MATCH_REPORTED)
+					selectedPlayer?.let {
+						startActivityForResult(Intent(this@LadderActivity, ReportMatchActivity::class.java).putExtra(ReportMatchActivity.PLAYER_EXTRA, it), ReportMatchActivity.RC_MATCH_REPORTED)
+					}
 				}.setNegativeButton("Cancel", null).show()
 			true
 		}
 		else -> super.onOptionsItemSelected(item)
 	}
 
-	private fun loadPlayers(ladderId: Int) {
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		if (requestCode == ReportMatchActivity.RC_MATCH_REPORTED) {
+			loadPlayers()
+		}
+		super.onActivityResult(requestCode, resultCode, data)
+	}
+
+	private fun loadPlayers() {
 		Timer("").schedule(1000) {
 			runOnUiThread {
 				view_switcher.displayedChild = VS_LIST_INDEX
