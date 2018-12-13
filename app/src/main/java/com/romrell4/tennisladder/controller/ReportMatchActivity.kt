@@ -33,7 +33,7 @@ class ReportMatchActivity: TLActivity() {
 		//TODO: Set up the rest of the view
 
 		button.setOnClickListener {
-
+			//TODO: Figure out how to finish with a result
 		}
 	}
 }
