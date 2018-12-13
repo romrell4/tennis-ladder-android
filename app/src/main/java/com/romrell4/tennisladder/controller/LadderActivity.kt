@@ -9,14 +9,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseAuth
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Player
+import com.romrell4.tennisladder.support.Adapter
+import com.romrell4.tennisladder.support.SuccessCallback
 import com.romrell4.tennisladder.support.TLActivity
 import kotlinx.android.synthetic.main.activity_ladder.*
 import kotlinx.android.synthetic.main.card_player.view.*
-import java.util.*
-import kotlin.concurrent.schedule
 
 private const val VS_LIST_INDEX = 1
 
@@ -26,7 +28,8 @@ class LadderActivity: TLActivity() {
 	}
 
 	private lateinit var ladder: Ladder
-	private val adapter = PlayersAdapter()
+	private var me: Player? = null
+	private val adapter = PlayerAdapter()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -49,14 +52,19 @@ class LadderActivity: TLActivity() {
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.report_option -> {
 			//TODO: Filter out yourself
-			val players = adapter.players
+			val players = adapter.list.filter { it.userId != FirebaseAuth.getInstance().currentUser?.uid }
 			var selectedPlayer: Player? = null
 			AlertDialog.Builder(this)
 				.setSingleChoiceItems(players.map { it.name }.toTypedArray(), -1) { _, index ->
 					selectedPlayer = players[index]
 				}.setPositiveButton("Select") { _, _ ->
 					selectedPlayer?.let {
-						startActivityForResult(Intent(this@LadderActivity, ReportMatchActivity::class.java).putExtra(ReportMatchActivity.PLAYER_EXTRA, it), ReportMatchActivity.RC_MATCH_REPORTED)
+						startActivityForResult(
+							Intent(this@LadderActivity, ReportMatchActivity::class.java)
+								.putExtra(ReportMatchActivity.ME_EXTRA, me)
+								.putExtra(ReportMatchActivity.OPPONENT_EXTRA, it),
+							ReportMatchActivity.RC_MATCH_REPORTED
+						)
 					}
 				}.setNegativeButton("Cancel", null).show()
 			true
@@ -72,24 +80,19 @@ class LadderActivity: TLActivity() {
 	}
 
 	private fun loadPlayers() {
-		Timer("").schedule(1000) {
-			runOnUiThread {
+		Client.api.getPlayers(ladder.ladderId).enqueue(object: SuccessCallback<List<Player>>(this) {
+			override fun onSuccess(data: List<Player>) {
+				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.userId }
 				view_switcher.displayedChild = VS_LIST_INDEX
-				adapter.players = listOf(
-					Player(3, 1, "Albus Dumbledore", 100, 1, 4, 0),
-					Player(1, 1, "Rebecca Bean", 30, 2, 3, 0),
-					Player(2, 1, "Eric Romrell", 10, 3, 2, 2),
-					Player(4, 1, "Jessica Romrell", 10, 3, 1, 1)
-				)
+				adapter.list = data
 			}
-		}
+		})
 	}
 
-	private inner class PlayersAdapter(var players: List<Player> = emptyList()): RecyclerView.Adapter<PlayersAdapter.PlayerViewHolder>() {
-		override fun getItemCount() = players.size
-		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PlayerViewHolder(layoutInflater.inflate(R.layout.card_player, parent, false))
-		override fun onBindViewHolder(viewHolder: PlayerViewHolder, position: Int) {
-			viewHolder.bind(players[position])
+	private inner class PlayerAdapter: Adapter<Player>(this, R.string.no_players_text) {
+		override fun createViewHolder(parent: ViewGroup) = PlayerViewHolder(layoutInflater.inflate(R.layout.card_player, parent, false))
+		override fun bind(viewHolder: RecyclerView.ViewHolder, item: Player) {
+			(viewHolder as? PlayerViewHolder)?.bind(item)
 		}
 
 		private inner class PlayerViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -100,7 +103,11 @@ class LadderActivity: TLActivity() {
 				nameText.text = player.name
 				scoreText.text = player.score.toString()
 				itemView.setOnClickListener {
-					startActivity(Intent(this@LadderActivity, PlayerActivity::class.java).putExtra(PlayerActivity.PLAYER_EXTRA, player))
+					startActivity(
+						Intent(this@LadderActivity, PlayerActivity::class.java)
+							.putExtra(PlayerActivity.ME_EXTRA, me)
+							.putExtra(PlayerActivity.PLAYER_EXTRA, player)
+					)
 				}
 			}
 		}

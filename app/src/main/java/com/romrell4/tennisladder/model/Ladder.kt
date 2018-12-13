@@ -6,7 +6,7 @@ import java.util.*
 
 @Parcelize
 data class Ladder(
-	val id: Int,
+	val ladderId: Int,
 	val name: String,
 	val startDate: Date,
 	val endDate: Date

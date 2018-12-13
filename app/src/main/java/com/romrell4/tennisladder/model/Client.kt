@@ -36,7 +36,7 @@ class Client {
 							FirebaseAuth.getInstance().currentUser?.let {
 								Tasks.await(it.getIdToken(true)).token?.let {
 									//This line will allow you to view and copy the token, for debug purposes
-//									println(it)
+									println(it)
 									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
 								} ?: throw Exception("Unable to retrieve token")
 							} ?: run {
@@ -55,7 +55,10 @@ class Client {
 		@GET("ladders")
 		fun getLadders(): Call<List<Ladder>>
 
-		@GET("ladders/{ladderId}/players")
-		fun getPlayers(@Path("ladderId") ladderId: String)
+		@GET("ladders/{ladder_id}/players")
+		fun getPlayers(@Path("ladder_id") ladderId: Int): Call<List<Player>>
+
+		@GET("ladders/{ladder_id}/players/{user_id}/matches")
+		fun getMatches(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String): Call<List<Match>>
 	}
 }

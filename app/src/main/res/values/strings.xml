@@ -10,6 +10,8 @@
     <string name="record_text_format">%1$d - %2$d</string>
     <string name="report_match_button_text">Report a Match</string>
     <string name="match_history_label_text">Match History</string>
+    <string name="no_ladders_text">There are no available ladders right now. Please check back later.</string>
+    <string name="no_players_text">There are no players in this ladder yet. Please check back later.</string>
     <string name="no_matches_text">This player hasn\'t played any matches in this ladder yet. Please check back later.</string>
     <string name="profile_content_description">Profile picture</string>
     <string name="set_separator">-</string>
