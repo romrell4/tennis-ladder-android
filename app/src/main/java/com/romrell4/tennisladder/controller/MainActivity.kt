@@ -15,7 +15,6 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
@@ -37,8 +36,6 @@ class MainActivity: TLActivity() {
 	private var logInMenuItem: MenuItem? = null
 	private var logOutMenuItem: MenuItem? = null
 	private val adapter = LadderAdapter()
-	private val user: FirebaseUser?
-		get() = FirebaseAuth.getInstance().currentUser
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -67,7 +64,7 @@ class MainActivity: TLActivity() {
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		user?.let {
+		FirebaseAuth.getInstance().currentUser?.let {
 			onLoggedIn(false)
 		} ?: run {
 			onLoggedOut(false)
@@ -126,7 +123,7 @@ class MainActivity: TLActivity() {
 		logInMenuItem?.isVisible = false
 		logOutMenuItem?.isVisible = true
 
-		user?.displayName.let {
+		FirebaseAuth.getInstance().currentUser?.displayName.let {
 			nav_view.nav_header_subtitle.text = it
 			if (displayToast) Toast.makeText(this, "Logged in as $it", Toast.LENGTH_SHORT).show()
 		}

@@ -2,6 +2,7 @@ package com.romrell4.tennisladder.controller
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -96,12 +97,18 @@ class LadderActivity: TLActivity() {
 		}
 
 		private inner class PlayerViewHolder(view: View): RecyclerView.ViewHolder(view) {
+			private val card = view.card
 			private val nameText = view.name_text
 			private val scoreText = view.score_text
 
 			fun bind(player: Player) {
 				nameText.text = player.name
 				scoreText.text = player.score.toString()
+
+				if (player == me) {
+					card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, R.color.me_color))
+				}
+
 				itemView.setOnClickListener {
 					startActivity(
 						Intent(this@LadderActivity, PlayerActivity::class.java)

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.romrell4.tennisladder.R
-import kotlinx.android.synthetic.main.card_no_matches.view.*
+import kotlinx.android.synthetic.main.card_empty_text.view.*
 import kotlin.math.max
 
 abstract class Adapter<T>(private val activity: AppCompatActivity, @StringRes private val emptyTextRes: Int): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -17,7 +17,7 @@ abstract class Adapter<T>(private val activity: AppCompatActivity, @StringRes pr
 
 	abstract fun createViewHolder(parent: ViewGroup): RecyclerView.ViewHolder
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		if (list.isEmpty()) EmptyViewHolder(activity.layoutInflater.inflate(R.layout.card_no_matches, parent, false))
+		if (list.isEmpty()) EmptyViewHolder(activity.layoutInflater.inflate(R.layout.card_empty_text, parent, false))
 		else createViewHolder(parent)
 
 	abstract fun bind(viewHolder: RecyclerView.ViewHolder, item: T)
