@@ -106,7 +106,7 @@ class LadderActivity: TLActivity() {
 				scoreText.text = player.score.toString()
 
 				if (player == me) {
-					card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, R.color.me_color))
+					card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, R.color.me_card_color))
 				}
 
 				itemView.setOnClickListener {

@@ -22,4 +22,9 @@
     <string name="submit">Submit</string>
     <string name="report_bar_text">Report a Match</string>
     <string name="error_message">An error occurred. Details: %1$s</string>
+    <string name="report_success_message">Thank you. Your match has been reported.</string>
+    <string name="score_confirmation_title">Confirm Scores</string>
+    <string name="score_confirmation_message">You have reported that you %1$s this match:\n\n%2$s\n\nIs this correct?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

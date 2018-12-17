@@ -48,7 +48,9 @@ class PlayerActivity: TLActivity() {
 			adapter = MatchAdapter()
 		}
 
-		//TODO: GONE button if they clicked on themselves
+		//Hide the report button if they clicked on themselves
+		report_match_button.visibility = if (me == player) View.GONE else View.VISIBLE
+
 		report_match_button.setOnClickListener {
 			startActivityForResult(
 				Intent(this@PlayerActivity, ReportMatchActivity::class.java)

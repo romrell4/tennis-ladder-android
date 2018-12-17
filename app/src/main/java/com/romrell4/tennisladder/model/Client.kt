@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -60,5 +61,8 @@ class Client {
 
 		@GET("ladders/{ladder_id}/players/{user_id}/matches")
 		fun getMatches(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String): Call<List<Match>>
+
+		@POST("ladders/{ladder_id}/matches")
+		fun reportMatch(@Path("ladder_id") ladderId: Int, @Body match: Match): Call<Match>
 	}
 }

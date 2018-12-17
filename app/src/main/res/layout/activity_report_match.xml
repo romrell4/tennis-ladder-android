@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/report_instructions_label" />
 
     <NumberPicker
-        android:id="@+id/winner_set1_picker"
+        android:id="@+id/me_set1_picker"
         android:layout_width="@dimen/picker_width"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -110,19 +110,19 @@
         android:layout_height="wrap_content"
         android:text="@string/set_separator"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
         app:layout_constraintEnd_toEndOf="@+id/set1_label"
         app:layout_constraintStart_toStartOf="@+id/set1_label"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+        app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
 
     <NumberPicker
-        android:id="@+id/loser_set1_picker"
+        android:id="@+id/opponent_set1_picker"
         android:layout_width="@dimen/picker_width"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
         app:layout_constraintStart_toEndOf="@+id/set1_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+        app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
 
     <android.support.constraint.Guideline
         android:id="@+id/one_third_guideline"
@@ -146,13 +146,13 @@
         app:layout_constraintTop_toTopOf="@+id/set1_label" />
 
     <NumberPicker
-        android:id="@+id/winner_set2_picker"
+        android:id="@+id/me_set2_picker"
         android:layout_width="@dimen/picker_width"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
         app:layout_constraintEnd_toStartOf="@+id/set2_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+        app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
 
     <TextView
         android:id="@+id/set2_separator"
@@ -166,13 +166,13 @@
         app:layout_constraintTop_toTopOf="@+id/set1_separator" />
 
     <NumberPicker
-        android:id="@+id/loser_set2_picker"
+        android:id="@+id/opponent_set2_picker"
         android:layout_width="@dimen/picker_width"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
         app:layout_constraintStart_toEndOf="@+id/set2_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+        app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
 
     <android.support.constraint.Guideline
         android:id="@+id/two_thirds_guideline"
@@ -197,13 +197,13 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <NumberPicker
-        android:id="@+id/winner_set3_picker"
+        android:id="@+id/me_set3_picker"
         android:layout_width="@dimen/picker_width"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
         app:layout_constraintEnd_toStartOf="@+id/set3_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+        app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
 
     <TextView
         android:id="@+id/set3_separator"
@@ -218,13 +218,13 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <NumberPicker
-        android:id="@+id/loser_set3_picker"
+        android:id="@+id/opponent_set3_picker"
         android:layout_width="@dimen/picker_width"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_picker"
+        app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
         app:layout_constraintStart_toEndOf="@+id/set3_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_picker" />
+        app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
 
     <Button
         android:id="@+id/button"
