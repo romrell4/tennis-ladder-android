@@ -26,7 +26,6 @@ class ReportMatchActivity: TLActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		//TODO: Put this in a scroll view
 		setContentView(R.layout.activity_report_match)
 
 		me = intent.getParcelableExtra(ME_EXTRA)
