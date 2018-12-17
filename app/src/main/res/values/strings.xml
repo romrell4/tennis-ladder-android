@@ -27,4 +27,5 @@
     <string name="score_confirmation_message">You have reported that you %1$s this match:\n\n%2$s\n\nIs this correct?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="report_match_dialog_title">Who did you play against?</string>
 </resources>

@@ -52,10 +52,10 @@ class LadderActivity: TLActivity() {
 
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.report_option -> {
-			//TODO: Filter out yourself
-			val players = adapter.list.filter { it.userId != FirebaseAuth.getInstance().currentUser?.uid }
+			val players = adapter.list.filter { it != me }
 			var selectedPlayer: Player? = null
 			AlertDialog.Builder(this)
+				.setTitle(R.string.report_match_dialog_title)
 				.setSingleChoiceItems(players.map { it.name }.toTypedArray(), -1) { _, index ->
 					selectedPlayer = players[index]
 				}.setPositiveButton("Select") { _, _ ->
