@@ -49,7 +49,8 @@ class ReportMatchActivity: TLActivity() {
 					Client.api.reportMatch(me.ladderId, match).enqueue(object: SuccessCallback<Match>(this) {
 						override fun onSuccess(data: Match) {
 							Toast.makeText(this@ReportMatchActivity, R.string.report_success_message, Toast.LENGTH_SHORT).show()
-							//TODO: Figure out how to finish with a result
+							setResult(RC_MATCH_REPORTED)
+							finish()
 						}
 					})
 				}
