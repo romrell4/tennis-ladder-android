@@ -45,25 +45,6 @@ class LadderActivity: TLActivity() {
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
 
-		report_match_button.setOnClickListener {
-			val players = adapter.list.filter { it != me }
-			var selectedPlayer: Player? = null
-			AlertDialog.Builder(this)
-				.setTitle(R.string.report_match_dialog_title)
-				.setSingleChoiceItems(players.map { it.name }.toTypedArray(), -1) { _, index ->
-					selectedPlayer = players[index]
-				}.setPositiveButton("Select") { _, _ ->
-					selectedPlayer?.let {
-						startActivityForResult(
-							Intent(this@LadderActivity, ReportMatchActivity::class.java)
-								.putExtra(ReportMatchActivity.ME_EXTRA, me)
-								.putExtra(ReportMatchActivity.OPPONENT_EXTRA, it),
-							ReportMatchActivity.RC_MATCH_REPORTED
-						)
-					}
-				}.setNegativeButton("Cancel", null).show()
-		}
-
 		loadPlayers()
 	}
 
@@ -74,12 +55,38 @@ class LadderActivity: TLActivity() {
 		super.onActivityResult(requestCode, resultCode, data)
 	}
 
+	private fun loadReportButton() {
+		report_match_button.apply {
+			visibility = if (me != null) View.VISIBLE else View.GONE
+
+			setOnClickListener {
+				val players = adapter.list.filter { it != me }
+				var selectedPlayer: Player? = null
+				AlertDialog.Builder(this@LadderActivity)
+					.setTitle(R.string.report_match_dialog_title)
+					.setSingleChoiceItems(players.map { it.name }.toTypedArray(), -1) { _, index ->
+						selectedPlayer = players[index]
+					}.setPositiveButton("Select") { _, _ ->
+						selectedPlayer?.let {
+							startActivityForResult(
+								Intent(this@LadderActivity, ReportMatchActivity::class.java)
+									.putExtra(ReportMatchActivity.ME_EXTRA, me)
+									.putExtra(ReportMatchActivity.OPPONENT_EXTRA, it),
+								ReportMatchActivity.RC_MATCH_REPORTED
+							)
+						}
+					}.setNegativeButton("Cancel", null).show()
+			}
+		}
+	}
+
 	private fun loadPlayers() {
 		Client.api.getPlayers(ladder.ladderId).enqueue(object: SuccessCallback<List<Player>>(this) {
 			override fun onSuccess(data: List<Player>) {
 				FirebaseAuth.getInstance().currentUser?.let { user ->
 					data.firstOrNull { user.uid == it.userId }?.let {
 						me = it
+						loadReportButton()
 					} ?: run {
 						//TODO: Allow the user to request to be added to the tournament
 					}
