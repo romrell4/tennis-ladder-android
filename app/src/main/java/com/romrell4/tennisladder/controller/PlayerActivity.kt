@@ -99,7 +99,6 @@ class PlayerActivity: TLActivity() {
 	private fun loadMatches() {
 		Client.api.getMatches(player.ladderId, player.userId).enqueue(object: SuccessCallback<List<Match>>(this) {
 			override fun onSuccess(data: List<Match>) {
-				//TODO: Fix bug where this never shows data
 				view_switcher.displayedChild = VS_LIST_INDEX
 				adapter.list = data
 			}
