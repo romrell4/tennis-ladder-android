@@ -40,19 +40,12 @@ class LadderActivity: TLActivity() {
 		ladder = intent.getParcelableExtra(LADDER_EXTRA)
 		title = ladder.name
 
+		swipe_refresh_layout.setOnRefreshListener { loadPlayers() }
+
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
 
-		loadPlayers()
-	}
-
-	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		menuInflater.inflate(R.menu.ladder_menu, menu)
-		return super.onCreateOptionsMenu(menu)
-	}
-
-	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-		R.id.report_option -> {
+		report_match_button.setOnClickListener {
 			val players = adapter.list.filter { it != me }
 			var selectedPlayer: Player? = null
 			AlertDialog.Builder(this)
@@ -69,9 +62,9 @@ class LadderActivity: TLActivity() {
 						)
 					}
 				}.setNegativeButton("Cancel", null).show()
-			true
 		}
-		else -> super.onOptionsItemSelected(item)
+
+		loadPlayers()
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -84,8 +77,17 @@ class LadderActivity: TLActivity() {
 	private fun loadPlayers() {
 		Client.api.getPlayers(ladder.ladderId).enqueue(object: SuccessCallback<List<Player>>(this) {
 			override fun onSuccess(data: List<Player>) {
-				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.userId }
+				FirebaseAuth.getInstance().currentUser?.let { user ->
+					data.firstOrNull { user.uid == it.userId }?.let {
+						me = it
+					} ?: run {
+						//TODO: Allow the user to request to be added to the tournament
+					}
+				} ?: run {
+					//TODO: If the user is not logged in, do something?
+				}
 				view_switcher.displayedChild = VS_LIST_INDEX
+				swipe_refresh_layout.isRefreshing = false
 				adapter.list = data
 			}
 		})

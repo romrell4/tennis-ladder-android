@@ -10,6 +10,7 @@ import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.SuccessCallback
 import com.romrell4.tennisladder.support.TLActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_report_match.*
 
 class ReportMatchActivity: TLActivity() {
@@ -34,11 +35,14 @@ class ReportMatchActivity: TLActivity() {
 		me_name_text.text = me.name
 		opponent_name_text.text = opponent.name
 
+		Picasso.get().load(me.photoUrl).into(me_image)
+		Picasso.get().load(opponent.photoUrl).into(opponent_image)
+
 		setOnlyPickers = listOf(me_set1_picker, opponent_set1_picker, me_set2_picker, opponent_set2_picker)
 		setOrTiebreakPickers = listOf(me_set3_picker, opponent_set3_picker)
 
 		setOnlyPickers.forEach { it.apply { minValue = 0 }.apply { maxValue = 7 } }
-		setOrTiebreakPickers.forEach { it.apply { minValue = 0 }.apply { maxValue = 100 } }
+		setOrTiebreakPickers.forEach { it.apply { minValue = 0 }.apply { maxValue = 100 }.apply { wrapSelectorWheel = false } }
 
 		button.setOnClickListener {
 			val match = getMatch()

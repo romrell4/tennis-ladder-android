@@ -23,7 +23,6 @@ import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.max
 
-private const val RC_SIGN_IN = 100
 private const val VS_LIST_INDEX = 1
 
 class PlayerActivity: TLActivity() {
@@ -59,7 +58,6 @@ class PlayerActivity: TLActivity() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		when (requestCode) {
 			ReportMatchActivity.RC_MATCH_REPORTED -> loadMatches()
-			RC_SIGN_IN -> loadReportButton()
 			else -> super.onActivityResult(requestCode, resultCode, data)
 		}
 	}
@@ -69,17 +67,8 @@ class PlayerActivity: TLActivity() {
 			if (me == null) {
 				//If the user isn't logged in, make the button log them in
 				text = getString(R.string.login_to_report_match_button_text)
-				setOnClickListener {
-					startActivityForResult(
-						AuthUI.getInstance().createSignInIntentBuilder()
-							.setLogo(R.drawable.ic_tennis_ladder)
-							.setIsSmartLockEnabled(!BuildConfig.DEBUG)
-							.setAvailableProviders(listOf(
-								AuthUI.IdpConfig.GoogleBuilder(),
-								AuthUI.IdpConfig.EmailBuilder()
-							).map { it.build() }).build(), RC_SIGN_IN
-					)
-				}
+				isEnabled = false
+				alpha = 0.5f
 			} else if (me == player) {
 				//If they clicked on themself
 				visibility = View.GONE
