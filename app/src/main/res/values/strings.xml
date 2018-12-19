@@ -28,4 +28,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="report_match_dialog_title">Who did you play against?</string>
+    <string name="login_to_report_match_button_text">Login to Report a Match</string>
 </resources>

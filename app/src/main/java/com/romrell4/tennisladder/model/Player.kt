@@ -8,6 +8,7 @@ data class Player(
 	val userId: String,
 	val ladderId: Int,
 	val name: String,
+	val photoUrl: String?,
 	val score: Int,
 	val ranking: Int,
 	val wins: Int,
