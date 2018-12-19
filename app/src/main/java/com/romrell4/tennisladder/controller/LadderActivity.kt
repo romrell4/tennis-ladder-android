@@ -59,7 +59,7 @@ class LadderActivity: TLActivity() {
 		report_match_button.apply {
 			visibility = if (me != null) View.VISIBLE else View.GONE
 
-			setOnClickListener {
+			setOnClickListener { _ ->
 				val players = adapter.list.filter { it != me }
 				var selectedPlayer: Player? = null
 				AlertDialog.Builder(this@LadderActivity)
