@@ -2,14 +2,16 @@ package com.romrell4.tennisladder.controller
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
@@ -51,15 +53,21 @@ class LadderActivity: TLActivity() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		if (requestCode == ReportMatchActivity.RC_MATCH_REPORTED) {
 			loadPlayers()
+		} else if (requestCode == RC_SIGN_IN) {
+			if (resultCode == AppCompatActivity.RESULT_OK) {
+				loadPlayers()
+			} else {
+				val response = IdpResponse.fromResultIntent(data)
+				println("Failed login with error code: ${response?.error?.errorCode}")
+			}
 		}
 		super.onActivityResult(requestCode, resultCode, data)
 	}
 
-	private fun loadReportButton() {
-		report_match_button.apply {
-			visibility = if (me != null) View.VISIBLE else View.GONE
-
-			setOnClickListener { _ ->
+	private fun loadBottomButton() = when {
+		//The user is logged in AND is in the ladder already
+		me != null -> {
+			report_match_button.setup(R.string.report_match_button_text) {
 				val players = adapter.list.filter { it != me }
 				var selectedPlayer: Player? = null
 				AlertDialog.Builder(this@LadderActivity)
@@ -78,6 +86,24 @@ class LadderActivity: TLActivity() {
 					}.setNegativeButton("Cancel", null).show()
 			}
 		}
+		//The user is logged in, but is not in the ladder yet
+		FirebaseAuth.getInstance().currentUser != null -> {
+			report_match_button.setup(R.string.request_ladder_invite_text) {
+				//TODO: Somehow request to be invited to the ladder
+			}
+		}
+		//The user is not logged in
+		else -> {
+			report_match_button.setup(R.string.login_to_report_match_button_text) {
+				startLoginActivity()
+			}
+		}
+	}
+
+	private fun Button.setup(@StringRes textId: Int, listener: ((View) -> Unit)) {
+		visibility = View.VISIBLE
+		text = getString(textId)
+		setOnClickListener(listener)
 	}
 
 	private fun loadPlayers() {
@@ -86,16 +112,12 @@ class LadderActivity: TLActivity() {
 				FirebaseAuth.getInstance().currentUser?.let { user ->
 					data.firstOrNull { user.uid == it.userId }?.let {
 						me = it
-						loadReportButton()
-					} ?: run {
-						//TODO: Allow the user to request to be added to the tournament
 					}
-				} ?: run {
-					//TODO: If the user is not logged in, do something?
 				}
 				view_switcher.displayedChild = VS_LIST_INDEX
 				swipe_refresh_layout.isRefreshing = false
 				adapter.list = data
+				loadBottomButton()
 			}
 		})
 	}
