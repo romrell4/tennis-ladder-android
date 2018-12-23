@@ -35,8 +35,8 @@ class ReportMatchActivity: TLActivity() {
 		me_name_text.text = me.name
 		opponent_name_text.text = opponent.name
 
-		Picasso.get().load(me.photoUrl).into(me_image)
-		Picasso.get().load(opponent.photoUrl).into(opponent_image)
+		Picasso.get().load(me.photoUrl).placeholder(R.drawable.ic_default_user).into(me_image)
+		Picasso.get().load(opponent.photoUrl).placeholder(R.drawable.ic_default_user).into(opponent_image)
 
 		setOnlyPickers = listOf(me_set1_picker, opponent_set1_picker, me_set2_picker, opponent_set2_picker)
 		setOrTiebreakPickers = listOf(me_set3_picker, opponent_set3_picker)

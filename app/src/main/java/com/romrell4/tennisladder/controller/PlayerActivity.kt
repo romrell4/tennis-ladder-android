@@ -42,7 +42,7 @@ class PlayerActivity: TLActivity() {
 		me = intent.getParcelableExtra(ME_EXTRA)
 		player = intent.getParcelableExtra(PLAYER_EXTRA)
 
-		Picasso.get().load(player.photoUrl).into(image_view)
+		Picasso.get().load(player.photoUrl).placeholder(R.drawable.ic_default_user).into(image_view)
 
 		title = player.name
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)

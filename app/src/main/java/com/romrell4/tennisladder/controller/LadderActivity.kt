@@ -116,7 +116,7 @@ class LadderActivity: TLActivity() {
 				nameText.text = player.name
 				scoreText.text = player.score.toString()
 
-				Picasso.get().load(player.photoUrl).into(profileImage)
+				Picasso.get().load(player.photoUrl).placeholder(R.drawable.ic_default_user).into(profileImage)
 
 				if (player == me) {
 					card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, R.color.me_card_color))
