@@ -51,7 +51,6 @@ class PlayerActivity: TLActivity() {
 		recycler_view.layoutManager = LinearLayoutManager(this@PlayerActivity)
 		recycler_view.adapter = adapter
 
-		loadReportButton()
 		loadMatches()
 	}
 
@@ -59,29 +58,6 @@ class PlayerActivity: TLActivity() {
 		when (requestCode) {
 			ReportMatchActivity.RC_MATCH_REPORTED -> loadMatches()
 			else -> super.onActivityResult(requestCode, resultCode, data)
-		}
-	}
-
-	private fun loadReportButton() {
-		report_match_button.apply {
-			if (me == null) {
-				//If the user isn't logged in, make the button log them in
-				text = getString(R.string.login_to_report_match_button_text)
-				isEnabled = false
-				alpha = 0.5f
-			} else if (me == player) {
-				//If they clicked on themself
-				visibility = View.GONE
-			} else {
-				setOnClickListener {
-					startActivityForResult(
-						Intent(this@PlayerActivity, ReportMatchActivity::class.java)
-							.putExtra(ReportMatchActivity.ME_EXTRA, me)
-							.putExtra(ReportMatchActivity.OPPONENT_EXTRA, player)
-						, ReportMatchActivity.RC_MATCH_REPORTED
-					)
-				}
-			}
 		}
 	}
 
