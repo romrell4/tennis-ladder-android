@@ -143,9 +143,7 @@ class MainActivity: TLActivity() {
 				nameText.text = ladder.name
 				dateText.text = getString(R.string.date_format, DATE_FORMAT.format(ladder.startDate), DATE_FORMAT.format(ladder.endDate))
 				itemView.setOnClickListener {
-					startActivity(
-						Intent(this@MainActivity, LadderActivity::class.java).putExtra(LadderActivity.LADDER_EXTRA, ladder)
-					)
+					startActivity(Intent(this@MainActivity, LadderActivity::class.java).putExtra(LadderActivity.LADDER_EXTRA, ladder))
 				}
 			}
 		}
