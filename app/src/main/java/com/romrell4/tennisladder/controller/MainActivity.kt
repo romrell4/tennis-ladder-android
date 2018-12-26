@@ -28,7 +28,6 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val RC_SIGN_IN = 1
 private const val VS_LIST_INDEX = 1
 private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 
