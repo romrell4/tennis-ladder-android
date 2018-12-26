@@ -76,15 +76,7 @@ class MainActivity: TLActivity() {
 			true
 		}
 		R.id.nav_menu_login -> {
-			startActivityForResult(
-				AuthUI.getInstance().createSignInIntentBuilder()
-					.setLogo(R.drawable.ic_tennis_ladder)
-					.setIsSmartLockEnabled(!BuildConfig.DEBUG)
-					.setAvailableProviders(listOf(
-						AuthUI.IdpConfig.GoogleBuilder(),
-						AuthUI.IdpConfig.EmailBuilder()
-					).map { it.build() }).build(), RC_SIGN_IN
-			)
+			startLoginActivity()
 			true
 		}
 		R.id.nav_menu_logout -> {
