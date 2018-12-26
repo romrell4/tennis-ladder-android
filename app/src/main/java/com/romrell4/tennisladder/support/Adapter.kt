@@ -12,6 +12,10 @@ import kotlin.math.max
 
 abstract class Adapter<T>(private val activity: AppCompatActivity, @StringRes private val emptyTextRes: Int): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	var list: List<T> = emptyList()
+		set(value) {
+			field = value
+			notifyDataSetChanged()
+		}
 
 	override fun getItemCount() = max(list.size, 1)
 
