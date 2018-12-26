@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseApp
@@ -64,9 +63,9 @@ class MainActivity: TLActivity() {
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 		FirebaseAuth.getInstance().currentUser?.let {
-			onLoggedIn(false)
+			onLoggedIn()
 		} ?: run {
-			onLoggedOut(false)
+			onLoggedOut()
 		}
 		return super.onCreateOptionsMenu(menu)
 	}
@@ -118,22 +117,24 @@ class MainActivity: TLActivity() {
 		})
 	}
 
-	private fun onLoggedIn(displayToast: Boolean = true) {
+	private fun onLoggedIn() {
 		logInMenuItem?.isVisible = false
 		logOutMenuItem?.isVisible = true
 
 		FirebaseAuth.getInstance().currentUser?.displayName.let {
-			nav_view.nav_header_subtitle.text = it
-			if (displayToast) Toast.makeText(this, "Logged in as $it", Toast.LENGTH_SHORT).show()
+			val text = getString(R.string.logged_in_text, it)
+			supportActionBar?.subtitle = text
+			nav_view.nav_header_subtitle.text = text
 		}
 	}
 
-	private fun onLoggedOut(displayToast: Boolean = true) {
+	private fun onLoggedOut() {
 		logInMenuItem?.isVisible = true
 		logOutMenuItem?.isVisible = false
 
-		nav_view.nav_header_subtitle.text = getString(R.string.not_logged_in)
-		if (displayToast) Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+		val text = getString(R.string.not_logged_in)
+		supportActionBar?.subtitle = text
+		nav_view.nav_header_subtitle.text = text
 	}
 
 	private inner class LadderAdapter: Adapter<Ladder>(this, R.string.no_ladders_text) {
