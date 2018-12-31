@@ -113,13 +113,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/report_instructions_label" />
 
-            <NumberPicker
-                android:id="@+id/me_set1_picker"
-                android:layout_width="@dimen/picker_width"
-                android:layout_height="0dp"
+            <EditText
+                android:id="@+id/me_set1_score"
+                style="@style/SetEditText"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:descendantFocusability="blocksDescendants"
+                android:nextFocusForward="@id/opponent_set1_score"
                 app:layout_constraintEnd_toStartOf="@+id/set1_separator"
                 app:layout_constraintTop_toBottomOf="@+id/set1_label" />
 
@@ -129,20 +128,19 @@
                 android:layout_height="wrap_content"
                 android:text="@string/set_separator"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
+                app:layout_constraintBottom_toBottomOf="@+id/me_set1_score"
                 app:layout_constraintEnd_toEndOf="@+id/set1_label"
                 app:layout_constraintStart_toStartOf="@+id/set1_label"
-                app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
+                app:layout_constraintTop_toTopOf="@+id/me_set1_score" />
 
-            <NumberPicker
-                android:id="@+id/opponent_set1_picker"
-                android:layout_width="@dimen/picker_width"
-                android:layout_height="0dp"
+            <EditText
+                android:id="@+id/opponent_set1_score"
+                style="@style/SetEditText"
                 android:layout_marginStart="8dp"
-                android:descendantFocusability="blocksDescendants"
-                app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
+                android:nextFocusForward="@id/me_set2_score"
+                app:layout_constraintBottom_toBottomOf="@+id/me_set1_score"
                 app:layout_constraintStart_toEndOf="@+id/set1_separator"
-                app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
+                app:layout_constraintTop_toTopOf="@+id/me_set1_score" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/one_third_guideline"
@@ -165,15 +163,14 @@
                 app:layout_constraintStart_toStartOf="@+id/one_third_guideline"
                 app:layout_constraintTop_toTopOf="@+id/set1_label" />
 
-            <NumberPicker
-                android:id="@+id/me_set2_picker"
-                android:layout_width="@dimen/picker_width"
-                android:layout_height="0dp"
+            <EditText
+                android:id="@+id/me_set2_score"
+                style="@style/SetEditText"
                 android:layout_marginEnd="8dp"
-                android:descendantFocusability="blocksDescendants"
-                app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
+                android:nextFocusForward="@id/opponent_set2_score"
+                app:layout_constraintBottom_toBottomOf="@+id/me_set1_score"
                 app:layout_constraintEnd_toStartOf="@+id/set2_separator"
-                app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
+                app:layout_constraintTop_toTopOf="@+id/me_set1_score" />
 
             <TextView
                 android:id="@+id/set2_separator"
@@ -186,15 +183,14 @@
                 app:layout_constraintStart_toStartOf="@+id/set2_label"
                 app:layout_constraintTop_toTopOf="@+id/set1_separator" />
 
-            <NumberPicker
-                android:id="@+id/opponent_set2_picker"
-                android:layout_width="@dimen/picker_width"
-                android:layout_height="0dp"
+            <EditText
+                android:id="@+id/opponent_set2_score"
+                style="@style/SetEditText"
                 android:layout_marginStart="8dp"
-                android:descendantFocusability="blocksDescendants"
-                app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
+                android:nextFocusForward="@id/me_set3_score"
+                app:layout_constraintBottom_toBottomOf="@+id/me_set1_score"
                 app:layout_constraintStart_toEndOf="@+id/set2_separator"
-                app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
+                app:layout_constraintTop_toTopOf="@+id/me_set1_score" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/two_thirds_guideline"
@@ -218,15 +214,14 @@
                 app:layout_constraintTop_toTopOf="@+id/set1_label"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <NumberPicker
-                android:id="@+id/me_set3_picker"
-                android:layout_width="@dimen/picker_width"
-                android:layout_height="0dp"
+            <EditText
+                android:id="@+id/me_set3_score"
+                style="@style/SetEditText"
                 android:layout_marginEnd="8dp"
-                android:descendantFocusability="blocksDescendants"
-                app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
+                android:nextFocusForward="@id/opponent_set3_score"
+                app:layout_constraintBottom_toBottomOf="@+id/me_set1_score"
                 app:layout_constraintEnd_toStartOf="@+id/set3_separator"
-                app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
+                app:layout_constraintTop_toTopOf="@+id/me_set1_score" />
 
             <TextView
                 android:id="@+id/set3_separator"
@@ -240,15 +235,13 @@
                 app:layout_constraintTop_toTopOf="@+id/set1_separator"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <NumberPicker
-                android:id="@+id/opponent_set3_picker"
-                android:layout_width="@dimen/picker_width"
-                android:layout_height="0dp"
+            <EditText
+                android:id="@+id/opponent_set3_score"
+                style="@style/SetEditText"
                 android:layout_marginStart="8dp"
-                android:descendantFocusability="blocksDescendants"
-                app:layout_constraintBottom_toBottomOf="@+id/me_set1_picker"
+                app:layout_constraintBottom_toBottomOf="@+id/me_set1_score"
                 app:layout_constraintStart_toEndOf="@+id/set3_separator"
-                app:layout_constraintTop_toTopOf="@+id/me_set1_picker" />
+                app:layout_constraintTop_toTopOf="@+id/me_set1_score" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
