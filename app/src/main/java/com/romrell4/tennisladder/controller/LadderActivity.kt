@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -63,18 +62,13 @@ class LadderActivity: TLActivity() {
 
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.rules -> {
-			val dialog = AlertDialog.Builder(this)
-				.setView(ProgressBar(this))
+			val webView = WebView(this)
+			webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/docs/rules.html")
+
+			AlertDialog.Builder(this)
+				.setView(webView)
 				.setNeutralButton(android.R.string.ok, null)
 				.show()
-			val webView = WebView(this)
-			webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/res/rules.html")
-			webView.webViewClient = object: WebViewClient() {
-				override fun onPageFinished(view: WebView?, url: String?) {
-					dialog.setView(webView)
-				}
-			}
-			dialog.setView(webView)
 			true
 		}
 		else -> super.onOptionsItemSelected(item)
