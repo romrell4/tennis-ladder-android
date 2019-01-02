@@ -8,9 +8,15 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Html
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.ProgressBar
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.romrell4.tennisladder.R
@@ -48,6 +54,30 @@ class LadderActivity: TLActivity() {
 		recycler_view.adapter = adapter
 
 		loadPlayers()
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.ladders_menu, menu)
+		return super.onCreateOptionsMenu(menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+		R.id.rules -> {
+			val dialog = AlertDialog.Builder(this)
+				.setView(ProgressBar(this))
+				.setNeutralButton(android.R.string.ok, null)
+				.show()
+			val webView = WebView(this)
+			webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/res/rules.html")
+			webView.webViewClient = object: WebViewClient() {
+				override fun onPageFinished(view: WebView?, url: String?) {
+					dialog.setView(webView)
+				}
+			}
+			dialog.setView(webView)
+			true
+		}
+		else -> super.onOptionsItemSelected(item)
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
