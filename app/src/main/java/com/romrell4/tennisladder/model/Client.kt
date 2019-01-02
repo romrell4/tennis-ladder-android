@@ -37,7 +37,7 @@ class Client {
 							FirebaseAuth.getInstance().currentUser?.let {
 								Tasks.await(it.getIdToken(true)).token?.let {
 									//This line will allow you to view and copy the token, for debug purposes
-									println(it)
+//									println(it)
 									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
 								} ?: throw Exception("Unable to retrieve token")
 							} ?: run {
