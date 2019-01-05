@@ -61,7 +61,7 @@ class LadderActivity: TLActivity() {
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.rules -> {
 			val webView = WebView(this)
-			webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/docs/rules.html")
+			webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/rules.html")
 
 			AlertDialog.Builder(this)
 				.setView(webView)
