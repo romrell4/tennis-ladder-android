@@ -131,7 +131,7 @@ class LadderActivity: TLActivity() {
 	private fun loadPlayers() {
 		Client.api.getPlayers(ladder.ladderId).enqueue(object: SuccessCallback<List<Player>>(this) {
 			override fun onSuccess(data: List<Player>) {
-				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.userId }
+				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
 				view_switcher.displayedChild = VS_LIST_INDEX
 				swipe_refresh_layout.isRefreshing = false
 				adapter.list = data
@@ -153,10 +153,10 @@ class LadderActivity: TLActivity() {
 			private val scoreText = view.score_text
 
 			fun bind(player: Player) {
-				nameText.text = player.name
+				nameText.text = player.user.name
 				scoreText.text = player.score.toString()
 
-				Picasso.get().load(player.photoUrl).placeholder(R.drawable.ic_default_user).into(profileImage)
+				Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(profileImage)
 
 				card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, if (player == me) R.color.me_card_color else R.color.white))
 

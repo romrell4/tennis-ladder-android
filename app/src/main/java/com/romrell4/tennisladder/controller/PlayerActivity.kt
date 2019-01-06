@@ -42,9 +42,9 @@ class PlayerActivity: TLActivity() {
 		me = intent.getParcelableExtra(ME_EXTRA)
 		player = intent.getParcelableExtra(PLAYER_EXTRA)
 
-		Picasso.get().load(player.photoUrl).placeholder(R.drawable.ic_default_user).into(image_view)
+		Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(image_view)
 
-		title = player.name
+		title = player.user.name
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
@@ -64,7 +64,7 @@ class PlayerActivity: TLActivity() {
 	}
 
 	private fun loadMatches() {
-		Client.api.getMatches(player.ladderId, player.userId).enqueue(object: SuccessCallback<List<Match>>(this) {
+		Client.api.getMatches(player.ladderId, player.user.userId).enqueue(object: SuccessCallback<List<Match>>(this) {
 			override fun onSuccess(data: List<Match>) {
 				view_switcher.displayedChild = VS_LIST_INDEX
 				adapter.list = data
@@ -83,7 +83,7 @@ class PlayerActivity: TLActivity() {
 			private val scoreText = view.score_text
 
 			fun bind(match: Match) {
-				nameText.text = listOf(match.winner, match.loser).first { it.userId != player.userId }.name
+				nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
 				scoreText.text = match.scoreText
 			}
 		}

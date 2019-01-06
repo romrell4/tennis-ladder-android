@@ -41,11 +41,11 @@ class ReportMatchActivity: TLActivity() {
 		me = intent.getParcelableExtra(ME_EXTRA)
 		opponent = intent.getParcelableExtra(OPPONENT_EXTRA)
 
-		me_name_text.text = me.name
-		opponent_name_text.text = opponent.name
+		me_name_text.text = me.user.name
+		opponent_name_text.text = opponent.user.name
 
-		Picasso.get().load(me.photoUrl).placeholder(R.drawable.ic_default_user).into(me_image)
-		Picasso.get().load(opponent.photoUrl).placeholder(R.drawable.ic_default_user).into(opponent_image)
+		Picasso.get().load(me.user.photoUrl).placeholder(R.drawable.ic_default_user).into(me_image)
+		Picasso.get().load(opponent.user.photoUrl).placeholder(R.drawable.ic_default_user).into(opponent_image)
 
 		button.setOnClickListener {
 			try {

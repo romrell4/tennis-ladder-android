@@ -5,12 +5,19 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Player(
-	val userId: String,
+	val user: User,
 	val ladderId: Int,
-	val name: String,
-	val photoUrl: String?,
 	val score: Int,
 	val ranking: Int,
 	val wins: Int,
 	val losses: Int
-): Parcelable
+): Parcelable {
+	@Parcelize
+	data class User(
+		val userId: String,
+		val name: String,
+		val email: String,
+		val phoneNumber: String?,
+		val photoUrl: String?
+	): Parcelable
+}
