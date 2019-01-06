@@ -94,7 +94,7 @@ class LadderActivity: TLActivity() {
 				var selectedPlayer: Player? = null
 				AlertDialog.Builder(this@LadderActivity)
 					.setTitle(R.string.report_match_dialog_title)
-					.setSingleChoiceItems(players.map { it.name }.toTypedArray(), -1) { _, index ->
+					.setSingleChoiceItems(players.map { it.user.name }.toTypedArray(), -1) { _, index ->
 						selectedPlayer = players[index]
 					}.setPositiveButton("Select") { _, _ ->
 						selectedPlayer?.let {
