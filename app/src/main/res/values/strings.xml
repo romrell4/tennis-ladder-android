@@ -10,7 +10,7 @@
     <string name="record_label_text">Current Record:</string>
     <string name="record_text_format">%1$d - %2$d</string>
     <string name="report_match_button_text">Report a Match</string>
-    <string name="request_ladder_invite_text">Request an Invite to this Ladder</string>
+    <string name="request_ladder_invite_text">Request an Invite to This Ladder</string>
     <string name="login_to_report_match_button_text">Login to Report a Match</string>
     <string name="match_history_label_text">Match History</string>
     <string name="no_ladders_text">There are no available ladders right now. Please check back later.</string>

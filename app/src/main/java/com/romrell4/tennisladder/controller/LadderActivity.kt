@@ -131,11 +131,7 @@ class LadderActivity: TLActivity() {
 	private fun loadPlayers() {
 		Client.api.getPlayers(ladder.ladderId).enqueue(object: SuccessCallback<List<Player>>(this) {
 			override fun onSuccess(data: List<Player>) {
-				FirebaseAuth.getInstance().currentUser?.let { user ->
-					data.firstOrNull { user.uid == it.userId }?.let {
-						me = it
-					}
-				}
+				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.userId }
 				view_switcher.displayedChild = VS_LIST_INDEX
 				swipe_refresh_layout.isRefreshing = false
 				adapter.list = data
