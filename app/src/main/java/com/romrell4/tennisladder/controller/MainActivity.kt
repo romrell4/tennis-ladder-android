@@ -61,13 +61,15 @@ class MainActivity: TLActivity() {
 		loadLadders()
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+	override fun onStart() {
+		super.onStart()
+
+		//Reload the logged in state (in case they logged in on a deeper screen)
 		FirebaseAuth.getInstance().currentUser?.let {
 			onLoggedIn()
 		} ?: run {
 			onLoggedOut()
 		}
-		return super.onCreateOptionsMenu(menu)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
@@ -116,7 +118,7 @@ class MainActivity: TLActivity() {
 		FirebaseAuth.getInstance().currentUser?.displayName.let {
 			val text = getString(R.string.logged_in_text, it)
 			supportActionBar?.subtitle = text
-			nav_view.nav_header_subtitle.text = text
+			nav_view.nav_header_subtitle?.text = text
 		}
 	}
 
