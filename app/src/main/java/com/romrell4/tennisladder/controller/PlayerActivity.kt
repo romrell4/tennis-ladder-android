@@ -48,6 +48,8 @@ class PlayerActivity: TLActivity() {
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
+		//TODO: Add button to allow a player to challenge
+
 		recycler_view.layoutManager = LinearLayoutManager(this@PlayerActivity)
 		recycler_view.adapter = adapter
 
