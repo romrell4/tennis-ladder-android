@@ -26,6 +26,7 @@ import com.romrell4.tennisladder.support.TLActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_ladder.*
 import kotlinx.android.synthetic.main.card_player.view.*
+import kotlinx.android.synthetic.main.ladder_invite_dialog.view.*
 
 private const val VS_LIST_INDEX = 1
 
@@ -111,7 +112,18 @@ class LadderActivity: TLActivity() {
 		//The user is logged in, but is not in the ladder yet
 		FirebaseAuth.getInstance().currentUser != null -> {
 			report_match_button.setup(R.string.request_ladder_invite_text) {
-				//TODO: Somehow request to be invited to the ladder
+				val alertView = layoutInflater.inflate(R.layout.ladder_invite_dialog, null)
+				val editText = alertView.edit_text
+				AlertDialog.Builder(this)
+					.setTitle(getString(R.string.ladder_invite_dialog_title))
+					.setMessage(getString(R.string.ladder_invite_dialog_message))
+					.setView(alertView)
+					.setPositiveButton(android.R.string.ok) { _, _ ->
+						//TODO: Call web service
+						println(editText.text)
+					}
+					.setNegativeButton(android.R.string.cancel, null)
+					.show()
 			}
 		}
 		//The user is not logged in
