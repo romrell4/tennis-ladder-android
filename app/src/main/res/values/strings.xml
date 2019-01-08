@@ -35,4 +35,6 @@
     <string name="ladder_invite_dialog_title">Ladder Invite Request</string>
     <string name="ladder_invite_dialog_message">Please provide the entry code for this ladder:</string>
     <string name="code_hint">Code</string>
+    <string name="ladder_invite_success_message">You have successfully been added to this ladder.</string>
+    <string name="error">Error</string>
 </resources>

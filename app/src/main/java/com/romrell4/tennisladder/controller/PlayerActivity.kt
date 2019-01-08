@@ -6,22 +6,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.firebase.ui.auth.AuthUI
-import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
-import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.Adapter
-import com.romrell4.tennisladder.support.SuccessCallback
+import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.card_match.view.*
-import java.util.*
-import kotlin.concurrent.schedule
-import kotlin.math.max
 
 private const val VS_LIST_INDEX = 1
 
@@ -64,7 +58,7 @@ class PlayerActivity: TLActivity() {
 	}
 
 	private fun loadMatches() {
-		Client.api.getMatches(player.ladderId, player.user.userId).enqueue(object: SuccessCallback<List<Match>>(this) {
+		Client.api.getMatches(player.ladderId, player.user.userId).enqueue(object: Callback<List<Match>>(this) {
 			override fun onSuccess(data: List<Match>) {
 				view_switcher.displayedChild = VS_LIST_INDEX
 				adapter.list = data

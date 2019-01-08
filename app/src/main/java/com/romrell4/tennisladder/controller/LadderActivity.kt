@@ -14,20 +14,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.Toast
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Player
+import com.romrell4.tennisladder.model.ServerError
 import com.romrell4.tennisladder.support.Adapter
-import com.romrell4.tennisladder.support.SuccessCallback
+import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_ladder.*
 import kotlinx.android.synthetic.main.card_player.view.*
 import kotlinx.android.synthetic.main.ladder_invite_dialog.view.*
 
+private const val VS_SPINNER_INDEX = 0
 private const val VS_LIST_INDEX = 1
 
 class LadderActivity: TLActivity() {
@@ -37,6 +40,10 @@ class LadderActivity: TLActivity() {
 
 	private lateinit var ladder: Ladder
 	private var me: Player? = null
+		set(value) {
+			field = value
+			loadBottomButton()
+		}
 	private val adapter = PlayerAdapter()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,8 +126,24 @@ class LadderActivity: TLActivity() {
 					.setMessage(getString(R.string.ladder_invite_dialog_message))
 					.setView(alertView)
 					.setPositiveButton(android.R.string.ok) { _, _ ->
-						//TODO: Call web service
-						println(editText.text)
+						view_switcher.displayedChild = VS_SPINNER_INDEX
+						Client.api.addPlayerToLadder(ladder.ladderId, editText.text.toString()).enqueue(object: Callback<List<Player>>(this) {
+							override fun onSuccess(data: List<Player>) {
+								view_switcher.displayedChild = VS_LIST_INDEX
+								adapter.list = data
+								me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
+								Toast.makeText(this@LadderActivity, getString(R.string.ladder_invite_success_message), Toast.LENGTH_SHORT).show()
+							}
+
+							override fun onError(error: ServerError?, t: Throwable) {
+								view_switcher.displayedChild = VS_LIST_INDEX
+								AlertDialog.Builder(this@LadderActivity)
+									.setTitle(getString(R.string.error))
+									.setMessage(error?.error ?: t.message)
+									.setNeutralButton(android.R.string.ok, null)
+									.show()
+							}
+						})
 					}
 					.setNegativeButton(android.R.string.cancel, null)
 					.show()
@@ -141,13 +164,12 @@ class LadderActivity: TLActivity() {
 	}
 
 	private fun loadPlayers() {
-		Client.api.getPlayers(ladder.ladderId).enqueue(object: SuccessCallback<List<Player>>(this) {
+		Client.api.getPlayers(ladder.ladderId).enqueue(object: Callback<List<Player>>(this) {
 			override fun onSuccess(data: List<Player>) {
-				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
+				adapter.list = data
 				view_switcher.displayedChild = VS_LIST_INDEX
 				swipe_refresh_layout.isRefreshing = false
-				adapter.list = data
-				loadBottomButton()
+				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
 			}
 		})
 	}
