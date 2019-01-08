@@ -1,17 +1,15 @@
 package com.romrell4.tennisladder.controller
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.firebase.ui.auth.AuthUI
-import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
-import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.Adapter
@@ -20,9 +18,6 @@ import com.romrell4.tennisladder.support.TLActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.card_match.view.*
-import java.util.*
-import kotlin.concurrent.schedule
-import kotlin.math.max
 
 private const val VS_LIST_INDEX = 1
 
@@ -49,15 +44,19 @@ class PlayerActivity: TLActivity() {
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
-		//TODO: Add button to allow a player to challenge
 		challenge_button.setOnClickListener { _ ->
-			val contactOptions = listOf("Email" to player.user.email, "Phone" to player.user.phoneNumber).filter { it.second != null }
+			data class ContactOption(val title: String, val value: String?, val intent: Intent)
+
+			val contactOptions = listOf(
+				ContactOption("Email", player.user.email, Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:${player.user.email}?subject=${Uri.encode("Tennis Ladder Challenge")}"))),
+				ContactOption("Phone", player.user.phoneNumber, Intent(Intent.ACTION_SENDTO).setData(Uri.parse("smsto:${player.user.phoneNumber}")))
+			).filter { it.value != null }
 
 			if (contactOptions.isNotEmpty()) {
 				AlertDialog.Builder(this)
 					.setTitle(getString(R.string.challenge_dialog_title))
-					.setItems(contactOptions.map { it.first }.toTypedArray()) { _, index ->
-						println(contactOptions[index].second)
+					.setItems(contactOptions.map { it.title }.toTypedArray()) { _, index ->
+						startActivity(contactOptions[index].intent)
 					}
 					.show()
 			} else {
