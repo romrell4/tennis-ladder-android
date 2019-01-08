@@ -2,6 +2,7 @@ package com.romrell4.tennisladder.controller
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -49,6 +50,22 @@ class PlayerActivity: TLActivity() {
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
 		//TODO: Add button to allow a player to challenge
+		challenge_button.setOnClickListener { _ ->
+			val contactOptions = listOf("Email" to player.user.email, "Phone" to player.user.phoneNumber).filter { it.second != null }
+
+			if (contactOptions.isNotEmpty()) {
+				AlertDialog.Builder(this)
+					.setTitle(getString(R.string.challenge_dialog_title))
+					.setItems(contactOptions.map { it.first }.toTypedArray()) { _, index ->
+						println(contactOptions[index].second)
+					}
+					.show()
+			} else {
+				AlertDialog.Builder(this)
+					.setMessage("This player has not set up any contact options. Please notify the leader of the ladder so that they can resolve this.")
+					.show()
+			}
+		}
 
 		recycler_view.layoutManager = LinearLayoutManager(this@PlayerActivity)
 		recycler_view.adapter = adapter

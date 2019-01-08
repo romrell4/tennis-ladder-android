@@ -32,4 +32,6 @@
     <string name="no">No</string>
     <string name="report_match_dialog_title">Who did you play against?</string>
     <string name="rules_menu_title">Rules</string>
+    <string name="challenge_dialog_title">Contact player via:</string>
+    <string name="challenge_button_text">Challenge</string>
 </resources>
