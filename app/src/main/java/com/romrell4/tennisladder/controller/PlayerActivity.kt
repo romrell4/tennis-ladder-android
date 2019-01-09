@@ -13,7 +13,7 @@ import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.Adapter
-import com.romrell4.tennisladder.support.SuccessCallback
+import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_player.*
@@ -80,7 +80,7 @@ class PlayerActivity: TLActivity() {
 	}
 
 	private fun loadMatches() {
-		Client.api.getMatches(player.ladderId, player.user.userId).enqueue(object: SuccessCallback<List<Match>>(this) {
+		Client.api.getMatches(player.ladderId, player.user.userId).enqueue(object: Callback<List<Match>>(this) {
 			override fun onSuccess(data: List<Match>) {
 				view_switcher.displayedChild = VS_LIST_INDEX
 				adapter.list = data

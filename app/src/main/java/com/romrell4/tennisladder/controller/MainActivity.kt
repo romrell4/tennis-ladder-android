@@ -6,7 +6,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +13,11 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.support.Adapter
-import com.romrell4.tennisladder.support.SuccessCallback
+import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.card_ladder.view.*
@@ -103,7 +101,7 @@ class MainActivity: TLActivity() {
 	}
 
 	private fun loadLadders() {
-		Client.api.getLadders().enqueue(object: SuccessCallback<List<Ladder>>(this) {
+		Client.api.getLadders().enqueue(object: Callback<List<Ladder>>(this) {
 			override fun onSuccess(data: List<Ladder>) {
 				view_switcher.displayedChild = VS_LIST_INDEX
 				adapter.list = data

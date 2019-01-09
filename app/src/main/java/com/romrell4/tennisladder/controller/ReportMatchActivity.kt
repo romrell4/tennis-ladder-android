@@ -2,9 +2,7 @@ package com.romrell4.tennisladder.controller
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.getSystemService
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -16,7 +14,7 @@ import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
-import com.romrell4.tennisladder.support.SuccessCallback
+import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_report_match.*
@@ -54,7 +52,7 @@ class ReportMatchActivity: TLActivity() {
 					.setTitle(R.string.score_confirmation_title)
 					.setMessage(getString(R.string.score_confirmation_message, if (match.winner == me) "won" else "lost", match.scoreText))
 					.setPositiveButton(R.string.yes) { _, _ ->
-						Client.api.reportMatch(me.ladderId, match).enqueue(object: SuccessCallback<Match>(this) {
+						Client.api.reportMatch(me.ladderId, match).enqueue(object: Callback<Match>(this) {
 							override fun onSuccess(data: Match) {
 								Toast.makeText(this@ReportMatchActivity, R.string.report_success_message, Toast.LENGTH_SHORT).show()
 								setResult(RC_MATCH_REPORTED)

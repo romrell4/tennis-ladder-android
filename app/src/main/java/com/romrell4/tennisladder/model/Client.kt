@@ -3,30 +3,27 @@ package com.romrell4.tennisladder.model
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 class Client {
 	companion object {
+		val gson: Gson = GsonBuilder()
+			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+			.create()
 		val api: Api
 			get() {
 				return Retrofit.Builder()
 					.baseUrl("https://lxlwvoenil.execute-api.us-west-2.amazonaws.com/prod/")
 					.addConverterFactory(
-						GsonConverterFactory.create(
-							GsonBuilder()
-								.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-								.setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-								.create()
-						)
+						GsonConverterFactory.create(gson)
 					)
 					.client(OkHttpClient.Builder()
 						.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -58,6 +55,9 @@ class Client {
 
 		@GET("ladders/{ladder_id}/players")
 		fun getPlayers(@Path("ladder_id") ladderId: Int): Call<List<Player>>
+
+		@POST("ladders/{ladder_id}/players")
+		fun addPlayerToLadder(@Path("ladder_id") ladderId: Int, @Query("code") code: String): Call<List<Player>>
 
 		@GET("ladders/{ladder_id}/players/{user_id}/matches")
 		fun getMatches(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String): Call<List<Match>>
