@@ -1,7 +1,9 @@
 package com.romrell4.tennisladder.controller
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -42,7 +44,27 @@ class PlayerActivity: TLActivity() {
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
-		//TODO: Add button to allow a player to challenge
+		challenge_button.setOnClickListener { _ ->
+			data class ContactOption(val title: String, val value: String?, val intent: Intent)
+
+			val contactOptions = listOf(
+				ContactOption("Email", player.user.email, Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:${player.user.email}?subject=${Uri.encode("Tennis Ladder Challenge")}"))),
+				ContactOption("Phone", player.user.phoneNumber, Intent(Intent.ACTION_SENDTO).setData(Uri.parse("smsto:${player.user.phoneNumber}")))
+			).filter { it.value != null }
+
+			if (contactOptions.isNotEmpty()) {
+				AlertDialog.Builder(this)
+					.setTitle(getString(R.string.challenge_dialog_title))
+					.setItems(contactOptions.map { it.title }.toTypedArray()) { _, index ->
+						startActivity(contactOptions[index].intent)
+					}
+					.show()
+			} else {
+				AlertDialog.Builder(this)
+					.setMessage("This player has not set up any contact options. Please notify the leader of the ladder so that they can resolve this.")
+					.show()
+			}
+		}
 
 		recycler_view.layoutManager = LinearLayoutManager(this@PlayerActivity)
 		recycler_view.adapter = adapter
