@@ -44,6 +44,7 @@ class PlayerActivity: TLActivity() {
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
+		challenge_button.visibility = if (player != me) View.VISIBLE else View.GONE
 		challenge_button.setOnClickListener { _ ->
 			data class ContactOption(val title: String, val value: String?, val intent: Intent)
 
