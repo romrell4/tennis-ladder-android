@@ -130,8 +130,8 @@ class LadderActivity: TLActivity() {
 						Client.api.addPlayerToLadder(ladder.ladderId, editText.text.toString()).enqueue(object: Callback<List<Player>>(this) {
 							override fun onSuccess(data: List<Player>) {
 								view_switcher.displayedChild = VS_LIST_INDEX
-								adapter.list = data
 								me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
+								adapter.list = data
 								Toast.makeText(this@LadderActivity, getString(R.string.ladder_invite_success_message), Toast.LENGTH_SHORT).show()
 							}
 
@@ -166,10 +166,10 @@ class LadderActivity: TLActivity() {
 	private fun loadPlayers() {
 		Client.api.getPlayers(ladder.ladderId).enqueue(object: Callback<List<Player>>(this) {
 			override fun onSuccess(data: List<Player>) {
-				adapter.list = data
 				view_switcher.displayedChild = VS_LIST_INDEX
 				swipe_refresh_layout.isRefreshing = false
 				me = data.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
+				adapter.list = data
 			}
 		})
 	}
