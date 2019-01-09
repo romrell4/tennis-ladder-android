@@ -84,6 +84,7 @@ class MainActivity: TLActivity() {
 			onLoggedOut()
 			true
 		}
+		//TODO: Add profile page
 		else -> super.onOptionsItemSelected(item)
 	}
 
