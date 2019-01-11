@@ -3,9 +3,12 @@ package com.romrell4.tennisladder.controller
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.romrell4.tennisladder.R
@@ -44,8 +47,6 @@ class PlayerActivity: TLActivity() {
 		ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
 		record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
 
-		//TODO: Add "Add to Contacts" button
-
 		challenge_button.visibility = if (player != me) View.VISIBLE else View.GONE
 		challenge_button.setOnClickListener { _ ->
 			data class ContactOption(val title: String, val value: String?, val intent: Intent)
@@ -73,6 +74,26 @@ class PlayerActivity: TLActivity() {
 		recycler_view.adapter = adapter
 
 		loadMatches()
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.player_menu, menu)
+		return super.onCreateOptionsMenu(menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId) {
+		R.id.add -> {
+			startActivity(
+				Intent(ContactsContract.Intents.Insert.ACTION)
+					.apply { type = ContactsContract.RawContacts.CONTENT_TYPE }
+					.putExtra(ContactsContract.Intents.Insert.NAME, player.user.name)
+					.putExtra(ContactsContract.Intents.Insert.EMAIL, player.user.email)
+					.putExtra(ContactsContract.Intents.Insert.PHONE, player.user.phoneNumber)
+					.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+			)
+			true
+		}
+		else -> super.onOptionsItemSelected(item)
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
