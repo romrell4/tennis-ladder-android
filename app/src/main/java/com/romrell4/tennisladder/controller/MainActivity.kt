@@ -127,7 +127,7 @@ class MainActivity: TLActivity() {
 
 		val text = getString(R.string.not_logged_in)
 		supportActionBar?.subtitle = text
-		nav_view.nav_header_subtitle.text = text
+		nav_view.nav_header_subtitle?.text = text
 	}
 
 	private inner class LadderAdapter: Adapter<Ladder>(this, R.string.no_ladders_text) {
