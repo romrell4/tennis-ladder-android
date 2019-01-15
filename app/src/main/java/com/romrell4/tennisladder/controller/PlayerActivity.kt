@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val VS_LIST_INDEX = 1
-private val DATE_FORMAT = SimpleDateFormat("M/d/YYYY", Locale.US)
+private val MATCH_DATE_FORMAT = SimpleDateFormat("M/d/YYYY", Locale.US)
 
 class PlayerActivity: TLActivity() {
 	companion object {
@@ -128,7 +128,7 @@ class PlayerActivity: TLActivity() {
 
 			fun bind(match: Match) {
 				nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
-				dateText.text = DATE_FORMAT.format(match.matchDate)
+				dateText.text = MATCH_DATE_FORMAT.format(match.matchDate)
 				scoreText.text = match.scoreText
 			}
 		}
