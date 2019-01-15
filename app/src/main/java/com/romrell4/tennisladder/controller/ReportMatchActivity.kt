@@ -50,7 +50,7 @@ class ReportMatchActivity: TLActivity() {
 				val match = getMatch()
 				AlertDialog.Builder(this)
 					.setTitle(R.string.score_confirmation_title)
-					.setMessage(getString(R.string.score_confirmation_message, if (match.winner == me) "won" else "lost", match.scoreText))
+					.setMessage(getString(R.string.score_confirmation_message, match.scoreText))
 					.setPositiveButton(R.string.yes) { _, _ ->
 						Client.api.reportMatch(me.ladderId, match).enqueue(object: Callback<Match>(this) {
 							override fun onSuccess(data: Match) {
@@ -62,6 +62,8 @@ class ReportMatchActivity: TLActivity() {
 					}
 					.setNegativeButton(R.string.no, null)
 					.show()
+			} catch (e: IllegalStateException) {
+				Toast.makeText(this, "Only winners report matches. Please let ${opponent.user.name} know to report the set scores.", Toast.LENGTH_LONG).show()
 			} catch (e: NumberFormatException) {
 				Toast.makeText(this, "Invalid inputs. Please enter a valid set score.", Toast.LENGTH_LONG).show()
 			}
@@ -91,20 +93,22 @@ class ReportMatchActivity: TLActivity() {
 	private fun getMatch(): Match {
 		val playedThirdSet = me_set3_score.getIntOrNull() != null && opponent_set3_score.getIntOrNull() != null
 		val lastSetScore = if (playedThirdSet) me_set3_score.getInt() to opponent_set3_score.getInt() else me_set2_score.getInt() to opponent_set2_score.getInt()
-		val iWon = lastSetScore.first > lastSetScore.second
+		if (lastSetScore.first <= lastSetScore.second) {
+			throw IllegalStateException()
+		}
 
 		return Match(
 			ladderId = me.ladderId,
-			winner = if (iWon) me else opponent,
-			loser = if (iWon) opponent else me,
-			winnerSet1Score = (if (iWon) me_set1_score else opponent_set1_score).getInt(),
-			loserSet1Score = (if (iWon) opponent_set1_score else me_set1_score).getInt(),
-			winnerSet2Score = (if (iWon) me_set2_score else opponent_set2_score).getInt(),
-			loserSet2Score = (if (iWon) opponent_set2_score else me_set2_score).getInt()
+			winner = me,
+			loser = opponent,
+			winnerSet1Score = me_set1_score.getInt(),
+			loserSet1Score = opponent_set1_score.getInt(),
+			winnerSet2Score = me_set2_score.getInt(),
+			loserSet2Score = opponent_set2_score.getInt()
 		).apply {
 			if (playedThirdSet) {
-				winnerSet3Score = (if (iWon) me_set3_score else opponent_set3_score).getInt()
-				loserSet3Score = (if (iWon) opponent_set3_score else me_set3_score).getInt()
+				winnerSet3Score = me_set3_score.getInt()
+				loserSet3Score = opponent_set3_score.getInt()
 			}
 		}
 	}
