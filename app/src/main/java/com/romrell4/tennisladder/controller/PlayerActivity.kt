@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -130,6 +131,7 @@ class PlayerActivity: TLActivity() {
 				nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
 				dateText.text = MATCH_DATE_FORMAT.format(match.matchDate)
 				scoreText.text = match.scoreText(player)
+				scoreText.setTextColor(ContextCompat.getColor(this@PlayerActivity, if (match.winner == player) R.color.matchWinner else R.color.matchLoser))
 			}
 		}
 	}

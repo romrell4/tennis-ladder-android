@@ -192,7 +192,7 @@ class LadderActivity: TLActivity() {
 
 				Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(profileImage)
 
-				card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, if (player == me) R.color.me_card_color else R.color.white))
+				card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, if (player == me) R.color.meCardColor else R.color.white))
 
 				itemView.setOnClickListener {
 					startActivity(
