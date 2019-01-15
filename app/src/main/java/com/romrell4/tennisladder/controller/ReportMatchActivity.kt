@@ -50,7 +50,7 @@ class ReportMatchActivity: TLActivity() {
 				val match = getMatch()
 				AlertDialog.Builder(this)
 					.setTitle(R.string.score_confirmation_title)
-					.setMessage(getString(R.string.score_confirmation_message, match.scoreText))
+					.setMessage(getString(R.string.score_confirmation_message, match.scoreText(me)))
 					.setPositiveButton(R.string.yes) { _, _ ->
 						Client.api.reportMatch(me.ladderId, match).enqueue(object: Callback<Match>(this) {
 							override fun onSuccess(data: Match) {

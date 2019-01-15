@@ -129,7 +129,7 @@ class PlayerActivity: TLActivity() {
 			fun bind(match: Match) {
 				nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
 				dateText.text = MATCH_DATE_FORMAT.format(match.matchDate)
-				scoreText.text = match.scoreText
+				scoreText.text = match.scoreText(player)
 			}
 		}
 	}
