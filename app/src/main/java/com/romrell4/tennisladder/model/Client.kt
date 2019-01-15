@@ -16,7 +16,7 @@ class Client {
 	companion object {
 		val gson: Gson = GsonBuilder()
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-			.setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+			.setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
 			.create()
 		val api: Api
 			get() {

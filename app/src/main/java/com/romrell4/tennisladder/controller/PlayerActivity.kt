@@ -21,8 +21,11 @@ import com.romrell4.tennisladder.support.TLActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.card_match.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val VS_LIST_INDEX = 1
+private val DATE_FORMAT = SimpleDateFormat("M/d/YYYY", Locale.US)
 
 class PlayerActivity: TLActivity() {
 	companion object {
@@ -81,7 +84,7 @@ class PlayerActivity: TLActivity() {
 		return super.onCreateOptionsMenu(menu)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId) {
+	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.add -> {
 			startActivity(
 				Intent(ContactsContract.Intents.Insert.ACTION)
@@ -120,10 +123,12 @@ class PlayerActivity: TLActivity() {
 
 		private inner class MatchViewHolder(view: View): RecyclerView.ViewHolder(view) {
 			private val nameText = view.name_text
+			private val dateText = view.date_text
 			private val scoreText = view.score_text
 
 			fun bind(match: Match) {
 				nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
+				dateText.text = DATE_FORMAT.format(match.matchDate)
 				scoreText.text = match.scoreText
 			}
 		}
