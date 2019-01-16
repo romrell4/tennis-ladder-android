@@ -53,7 +53,12 @@ class ProfileActivity: TLActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_profile)
 
-		//TODO: Allow photo to be edited as well
+		image_view.setOnClickListener {
+			showEditDialog("Photo URL") {
+				user?.photoUrl = it
+				Picasso.get().load(it).placeholder(R.drawable.ic_default_user).into(image_view)
+			}
+		}
 
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
@@ -93,6 +98,21 @@ class ProfileActivity: TLActivity() {
 		val action: (String) -> Unit
 	)
 
+	private fun showEditDialog(label: String, action: (String) -> Unit) {
+		val alertView = layoutInflater.inflate(R.layout.dialog_profile_edit_value, null)
+		val editText = alertView.edit_text
+		AlertDialog.Builder(this)
+			.setTitle(getString(R.string.profile_edit_dialog_title))
+			.setMessage(getString(R.string.profile_edit_dialog_message, label))
+			.setView(alertView)
+			.setPositiveButton(android.R.string.ok) { _, _ ->
+				val newValue = editText.text.toString()
+				action(newValue)
+			}
+			.setNegativeButton(android.R.string.cancel, null)
+			.show()
+	}
+
 	private inner class ProfileInfoAdapter: Adapter<RowData>(this, R.string.no_user_text) {
 		override fun createViewHolder(parent: ViewGroup) = RowViewHolder(layoutInflater.inflate(R.layout.card_profile_info, parent, false))
 		override fun bind(viewHolder: RecyclerView.ViewHolder, item: RowData) {
@@ -108,20 +128,11 @@ class ProfileActivity: TLActivity() {
 				valueText.text = rowData.value ?: "Tap to set"
 				valueText.setTextColor(ContextCompat.getColor(this@ProfileActivity, if (rowData.value != null) R.color.black else android.R.color.darker_gray))
 				itemView.setOnClickListener {
-					val alertView = layoutInflater.inflate(R.layout.dialog_profile_edit_value, null)
-					val editText = alertView.edit_text
-					AlertDialog.Builder(this@ProfileActivity)
-						.setTitle(getString(R.string.profile_edit_dialog_title))
-						.setMessage(getString(R.string.profile_edit_dialog_message, rowData.label))
-						.setView(alertView)
-						.setPositiveButton(android.R.string.ok) { _, _ ->
-							val newValue = editText.text.toString()
-							rowData.action(newValue)
-							list[list.indexOf(rowData)].value = newValue
-							notifyDataSetChanged()
-						}
-						.setNegativeButton(android.R.string.cancel, null)
-						.show()
+					showEditDialog(rowData.label) {
+						rowData.action(it)
+						list[list.indexOf(rowData)].value = it
+						notifyDataSetChanged()
+					}
 				}
 			}
 		}
