@@ -53,6 +53,8 @@ class ProfileActivity: TLActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_profile)
 
+		//TODO: Allow photo to be edited as well
+
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
 
@@ -108,7 +110,6 @@ class ProfileActivity: TLActivity() {
 				itemView.setOnClickListener {
 					val alertView = layoutInflater.inflate(R.layout.dialog_profile_edit_value, null)
 					val editText = alertView.edit_text
-					editText.setText(rowData.value)
 					AlertDialog.Builder(this@ProfileActivity)
 						.setTitle(getString(R.string.profile_edit_dialog_title))
 						.setMessage(getString(R.string.profile_edit_dialog_message, rowData.label))
