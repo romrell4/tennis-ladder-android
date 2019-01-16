@@ -31,6 +31,7 @@ private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 class MainActivity: TLActivity() {
 	private var logInMenuItem: MenuItem? = null
 	private var logOutMenuItem: MenuItem? = null
+	private var profileMenuItem: MenuItem? = null
 	private val adapter = LadderAdapter()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +52,7 @@ class MainActivity: TLActivity() {
 			}
 			menu.findItem(R.id.nav_menu_login)?.let { logInMenuItem = it }
 			menu.findItem(R.id.nav_menu_logout)?.let { logOutMenuItem = it }
+			menu.findItem(R.id.nav_menu_profile)?.let { profileMenuItem = it }
 		}
 
 		recycler_view.layoutManager = LinearLayoutManager(this)
@@ -84,7 +86,12 @@ class MainActivity: TLActivity() {
 			onLoggedOut()
 			true
 		}
-		//TODO: Add profile page
+		R.id.nav_menu_profile -> {
+			FirebaseAuth.getInstance().currentUser?.uid?.let {
+				startActivity(Intent(this, ProfileActivity::class.java).putExtra(ProfileActivity.USER_ID_EXTRA, it))
+			}
+			true
+		}
 		else -> super.onOptionsItemSelected(item)
 	}
 
@@ -113,6 +120,7 @@ class MainActivity: TLActivity() {
 	private fun onLoggedIn() {
 		logInMenuItem?.isVisible = false
 		logOutMenuItem?.isVisible = true
+		profileMenuItem?.isVisible = true
 
 		FirebaseAuth.getInstance().currentUser?.displayName.let {
 			val text = getString(R.string.logged_in_text, it)
@@ -124,6 +132,7 @@ class MainActivity: TLActivity() {
 	private fun onLoggedOut() {
 		logInMenuItem?.isVisible = true
 		logOutMenuItem?.isVisible = false
+		profileMenuItem?.isVisible = false
 
 		val text = getString(R.string.not_logged_in)
 		supportActionBar?.subtitle = text
