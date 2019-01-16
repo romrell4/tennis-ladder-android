@@ -40,4 +40,10 @@
     <string name="ladder_invite_success_message">You have successfully been added to this ladder.</string>
     <string name="error">Error</string>
     <string name="add">Add</string>
+    <string name="edit_profile_header_text">Tap Cell to Edit Value</string>
+    <string name="profile_menu_item">Profile</string>
+    <string name="no_user_text">Unable to load user information</string>
+    <string name="profile_edit_dialog_title">Edit Value</string>
+    <string name="profile_edit_dialog_message">Enter new value for \'%1$s\':</string>
+    <string name="save">Save</string>
 </resources>

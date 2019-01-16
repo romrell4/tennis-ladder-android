@@ -50,6 +50,12 @@ class Client {
 	}
 
 	interface Api {
+		@GET("users/{user_id}")
+		fun getUser(@Path("user_id") userId: String): Call<User>
+
+		@PUT("users/{user_id}")
+		fun updateUser(@Path("user_id") userId: String, @Body user: User): Call<User>
+
 		@GET("ladders")
 		fun getLadders(): Call<List<Ladder>>
 
