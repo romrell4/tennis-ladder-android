@@ -98,7 +98,7 @@ class LadderActivity: TLActivity() {
 		//The user is logged in AND is in the ladder already
 		me != null -> {
 			report_match_button.setup(R.string.report_match_button_text) {
-				val players = adapter.list.filter { it != me }
+				val players = adapter.list.filter { it != me }.sortedBy { it.user.name.toLowerCase() }
 				var selectedPlayer: Player? = null
 				AlertDialog.Builder(this@LadderActivity)
 					.setTitle(R.string.report_match_dialog_title)
