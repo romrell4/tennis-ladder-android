@@ -11,4 +11,19 @@ data class Player(
 	val ranking: Int,
 	val wins: Int,
 	val losses: Int
-): Parcelable
+): Parcelable {
+	override fun hashCode(): Int {
+		return user.hashCode()
+	}
+
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (javaClass != other?.javaClass) return false
+
+		other as Player
+
+		if (user != other.user) return false
+
+		return true
+	}
+}
