@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/profile_image"
             android:layout_width="@dimen/profile_image_card_size"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/profile_image_card_size"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
