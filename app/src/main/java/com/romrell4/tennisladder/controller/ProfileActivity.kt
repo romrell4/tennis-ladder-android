@@ -43,6 +43,9 @@ class ProfileActivity: TLActivity() {
 					},
 					RowData("Phone Number", it.phoneNumber) { phoneNumber ->
 						user?.phoneNumber = phoneNumber
+					},
+					RowData("Availability", it.availabilityText) { availabilityText ->
+						user?.availabilityText = availabilityText
 					}
 				)
 			}

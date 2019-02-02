@@ -9,7 +9,8 @@ data class User(
 	var name: String,
 	var email: String,
 	var phoneNumber: String?,
-	var photoUrl: String?
+	var photoUrl: String?,
+	var availabilityText: String?
 ): Parcelable {
 	override fun hashCode(): Int {
 		return userId.hashCode()
