@@ -4,14 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Match
@@ -74,7 +74,7 @@ class PlayerActivity: TLActivity() {
 			}
 		}
 
-		recycler_view.layoutManager = LinearLayoutManager(this@PlayerActivity)
+		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
 
 		loadMatches()

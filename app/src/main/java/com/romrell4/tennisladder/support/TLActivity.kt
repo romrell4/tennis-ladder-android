@@ -1,8 +1,8 @@
 package com.romrell4.tennisladder.support
 
 import android.annotation.SuppressLint
-import android.support.annotation.LayoutRes
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
