@@ -39,7 +39,8 @@
     <string name="code_hint">Code</string>
     <string name="ladder_invite_success_message">You have successfully been added to this ladder.</string>
     <string name="error">Error</string>
-    <string name="add">Add</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="view_profile">View Profile</string>
     <string name="edit_profile_header_text">Tap to Edit Values</string>
     <string name="profile_menu_item">Profile</string>
     <string name="no_user_text">Unable to load user information</string>

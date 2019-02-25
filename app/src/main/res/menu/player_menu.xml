@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/add"
+        android:id="@+id/add_contact"
         android:icon="@drawable/ic_add_black_24dp"
-        android:title="@string/add"
-        app:showAsAction="always" />
+        android:title="@string/add_contact" />
+    <item
+        android:id="@+id/view_profile"
+        android:title="@string/view_profile" />
 </menu>

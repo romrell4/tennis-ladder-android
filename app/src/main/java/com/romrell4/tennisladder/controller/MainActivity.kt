@@ -88,7 +88,9 @@ class MainActivity: TLActivity() {
 		}
 		R.id.nav_menu_profile -> {
 			FirebaseAuth.getInstance().currentUser?.uid?.let {
-				startActivity(Intent(this, ProfileActivity::class.java).putExtra(ProfileActivity.USER_ID_EXTRA, it))
+				startActivity(Intent(this, ProfileActivity::class.java)
+					.putExtra(ProfileActivity.MY_ID_EXTRA, it)
+					.putExtra(ProfileActivity.USER_ID_EXTRA, it))
 			}
 			true
 		}
