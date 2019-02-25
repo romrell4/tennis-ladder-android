@@ -26,8 +26,12 @@ private const val VS_LIST_INDEX = 1
 
 class ProfileActivity: TLActivity() {
 	companion object {
+		const val MY_ID_EXTRA = "MY_ID"
 		const val USER_ID_EXTRA = "USER_ID"
 	}
+
+	private val editable
+		get() = intent.getStringExtra(MY_ID_EXTRA) == intent.getStringExtra(USER_ID_EXTRA)
 
 	private var user: User? = null
 		set(value) {
@@ -56,10 +60,14 @@ class ProfileActivity: TLActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_profile)
 
-		image_view.setOnClickListener {
-			showEditDialog("Photo URL") {
-				user?.photoUrl = it
-				Picasso.get().load(it).placeholder(R.drawable.ic_default_user).into(image_view)
+		//Configure the view differently if they're looking at their own profile
+		if (editable) {
+			header_text.visibility = View.VISIBLE
+			image_view.setOnClickListener {
+				showEditDialog("Photo URL") {
+					user?.photoUrl = it
+					Picasso.get().load(it).placeholder(R.drawable.ic_default_user).into(image_view)
+				}
 			}
 		}
 
@@ -75,7 +83,10 @@ class ProfileActivity: TLActivity() {
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		menuInflater.inflate(R.menu.profile_menu, menu)
+		//Only display the save button if the user is looking at their own profile
+		if (editable) {
+			menuInflater.inflate(R.menu.profile_menu, menu)
+		}
 		return super.onCreateOptionsMenu(menu)
 	}
 
@@ -130,11 +141,13 @@ class ProfileActivity: TLActivity() {
 				labelText.text = rowData.label
 				valueText.text = rowData.value ?: "Tap to set"
 				valueText.setTextColor(ContextCompat.getColor(this@ProfileActivity, if (rowData.value != null) R.color.black else android.R.color.darker_gray))
-				itemView.setOnClickListener {
-					showEditDialog(rowData.label) {
-						rowData.action(it)
-						list[list.indexOf(rowData)].value = it
-						notifyDataSetChanged()
+				if (editable) {
+					itemView.setOnClickListener {
+						showEditDialog(rowData.label) {
+							rowData.action(it)
+							list[list.indexOf(rowData)].value = it
+							notifyDataSetChanged()
+						}
 					}
 				}
 			}

@@ -81,12 +81,14 @@ class PlayerActivity: TLActivity() {
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		menuInflater.inflate(R.menu.player_menu, menu)
+		if (me != null) {
+			menuInflater.inflate(R.menu.player_menu, menu)
+		}
 		return super.onCreateOptionsMenu(menu)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-		R.id.add -> {
+		R.id.add_contact -> {
 			startActivity(
 				Intent(ContactsContract.Intents.Insert.ACTION)
 					.apply { type = ContactsContract.RawContacts.CONTENT_TYPE }
@@ -95,6 +97,12 @@ class PlayerActivity: TLActivity() {
 					.putExtra(ContactsContract.Intents.Insert.PHONE, player.user.phoneNumber)
 					.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
 			)
+			true
+		}
+		R.id.view_profile -> {
+			startActivity(Intent(this, ProfileActivity::class.java)
+				.putExtra(ProfileActivity.MY_ID_EXTRA, me?.user?.userId)
+				.putExtra(ProfileActivity.USER_ID_EXTRA, player.user.userId))
 			true
 		}
 		else -> super.onOptionsItemSelected(item)
