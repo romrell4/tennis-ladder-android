@@ -7,6 +7,8 @@ import kotlinx.android.parcel.Parcelize
 data class Player(
 	val user: User,
 	val ladderId: Int,
+	val earnedPoints: Int,
+	val borrowedPoints: Int,
 	val score: Int,
 	val ranking: Int,
 	val wins: Int,

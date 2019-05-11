@@ -184,11 +184,15 @@ class LadderActivity: TLActivity() {
 			private val card = view.card
 			private val profileImage = view.profile_image
 			private val nameText = view.name_text
+			private val earnedPointsText = view.earned_points
+			private val borrowedPointsText = view.borrowed_points
 			private val scoreText = view.score_text
 
 			fun bind(player: Player) {
 				nameText.text = player.user.name
-				scoreText.text = player.score.toString()
+				earnedPointsText.text = "Earned: ${player.earnedPoints}"
+				borrowedPointsText.text = "Borrowed: ${player.borrowedPoints}"
+				scoreText.text = "Total: ${player.score}"
 
 				Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(profileImage)
 
