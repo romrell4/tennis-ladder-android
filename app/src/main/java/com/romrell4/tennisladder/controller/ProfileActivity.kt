@@ -65,8 +65,11 @@ class ProfileActivity: TLActivity() {
 			header_text.visibility = View.VISIBLE
 			image_view.setOnClickListener {
 				showEditDialog("Photo URL") {
-					user?.photoUrl = it
-					Picasso.get().load(it).placeholder(R.drawable.ic_default_user).into(image_view)
+					//If they didn't add a URL, default to null
+					it.takeIf { it.isNotBlank() }.let {
+						user?.photoUrl = it
+						Picasso.get().load(it).placeholder(R.drawable.ic_default_user).into(image_view)
+					}
 				}
 			}
 		}
