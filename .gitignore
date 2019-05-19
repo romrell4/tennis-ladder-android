@@ -11,3 +11,4 @@ release
 /captures
 .externalNativeBuild
 google-services.json
+fastlane.json
