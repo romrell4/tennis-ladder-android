@@ -192,8 +192,13 @@ class LadderActivity: TLActivity() {
 
 			fun bind(player: Player) {
 				nameText.text = player.user.name
-				earnedPointsText.text = "Earned: ${player.earnedPoints}"
-				borrowedPointsText.text = "Borrowed: ${player.borrowedPoints}"
+				if (player.borrowedPoints == 0) {
+					earnedPointsText.visibility = View.GONE
+					borrowedPointsText.visibility = View.GONE
+				} else {
+					earnedPointsText.text = "Earned: ${player.earnedPoints}"
+					borrowedPointsText.text = "Borrowed: ${player.borrowedPoints}"
+				}
 				scoreText.text = "Total: ${player.score}"
 
 				Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(profileImage)
