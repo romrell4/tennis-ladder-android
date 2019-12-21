@@ -16,6 +16,7 @@ import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
+import com.romrell4.tennisladder.support.requireParcelableExtra
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_report_match.*
 import java.lang.NumberFormatException
@@ -36,8 +37,8 @@ class ReportMatchActivity: TLActivity() {
 
 		setupScoreFields()
 
-		me = intent.getParcelableExtra(ME_EXTRA)
-		opponent = intent.getParcelableExtra(OPPONENT_EXTRA)
+		me = intent.requireParcelableExtra(ME_EXTRA)
+		opponent = intent.requireParcelableExtra(OPPONENT_EXTRA)
 
 		me_name_text.text = me.user.name
 		opponent_name_text.text = opponent.user.name
@@ -132,6 +133,6 @@ class ReportMatchActivity: TLActivity() {
 
 	private fun Activity.hideKeyboard() {
 		val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-		inputMethodManager.hideSoftInputFromWindow((if (currentFocus == null) View(this) else currentFocus).windowToken, 0)
+		inputMethodManager.hideSoftInputFromWindow((if (currentFocus == null) View(this) else currentFocus)?.windowToken, 0)
 	}
 }
