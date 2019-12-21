@@ -1,11 +1,11 @@
 package com.romrell4.tennisladder.controller
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_ladder.*
 import kotlinx.android.synthetic.main.card_player.view.*
 import kotlinx.android.synthetic.main.dialog_ladder_invite.view.*
+import java.util.*
 
 private const val VS_SPINNER_INDEX = 0
 private const val VS_LIST_INDEX = 1
@@ -84,7 +85,7 @@ class LadderActivity: TLActivity() {
 		if (requestCode == ReportMatchActivity.RC_MATCH_REPORTED) {
 			loadPlayers()
 		} else if (requestCode == RC_SIGN_IN) {
-			if (resultCode == AppCompatActivity.RESULT_OK) {
+			if (resultCode == RESULT_OK) {
 				loadPlayers()
 			} else {
 				val response = IdpResponse.fromResultIntent(data)
@@ -98,7 +99,7 @@ class LadderActivity: TLActivity() {
 		//The user is logged in AND is in the ladder already
 		me != null -> {
 			report_match_button.setup(R.string.report_match_button_text) {
-				val players = adapter.list.filter { it != me }.sortedBy { it.user.name.toLowerCase() }
+				val players = adapter.list.filter { it != me }.sortedBy { it.user.name.toLowerCase(Locale.getDefault()) }
 				var selectedPlayer: Player? = null
 				AlertDialog.Builder(this@LadderActivity)
 					.setTitle(R.string.report_match_dialog_title)
@@ -119,6 +120,7 @@ class LadderActivity: TLActivity() {
 		//The user is logged in, but is not in the ladder yet
 		FirebaseAuth.getInstance().currentUser != null -> {
 			report_match_button.setup(R.string.request_ladder_invite_text) {
+				@SuppressLint("InflateParams")
 				val alertView = layoutInflater.inflate(R.layout.dialog_ladder_invite, null)
 				val editText = alertView.edit_text
 				AlertDialog.Builder(this)
