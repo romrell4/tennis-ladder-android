@@ -31,8 +31,8 @@ class Client {
 							val requestBuilder = chain.request().newBuilder()
 
 							//If the user is logged in, attach a token to the request
-							FirebaseAuth.getInstance().currentUser?.let {
-								Tasks.await(it.getIdToken(true)).token?.let {
+							FirebaseAuth.getInstance().currentUser?.let { user ->
+								Tasks.await(user.getIdToken(true)).token?.let {
 									//This line will allow you to view and copy the token, for debug purposes
 //									println(it)
 									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
@@ -45,7 +45,7 @@ class Client {
 						.build()
 					)
 					.build()
-					.create(Client.Api::class.java)
+					.create(Api::class.java)
 			}
 	}
 

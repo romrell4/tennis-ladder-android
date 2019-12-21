@@ -16,7 +16,7 @@ import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
-import com.romrell4.tennisladder.support.requireParcelableExtra
+import com.romrell4.tennisladder.support.requireExtra
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_report_match.*
 import java.lang.NumberFormatException
@@ -37,8 +37,8 @@ class ReportMatchActivity: TLActivity() {
 
 		setupScoreFields()
 
-		me = intent.requireParcelableExtra(ME_EXTRA)
-		opponent = intent.requireParcelableExtra(OPPONENT_EXTRA)
+		me = intent.requireExtra(ME_EXTRA)
+		opponent = intent.requireExtra(OPPONENT_EXTRA)
 
 		me_name_text.text = me.user.name
 		opponent_name_text.text = opponent.user.name

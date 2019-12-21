@@ -16,9 +16,7 @@ import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
-import com.romrell4.tennisladder.support.Adapter
-import com.romrell4.tennisladder.support.Callback
-import com.romrell4.tennisladder.support.TLActivity
+import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.card_match.view.*
@@ -42,8 +40,8 @@ class PlayerActivity: TLActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_player)
 
-		me = intent.getParcelableExtra(ME_EXTRA)
-		player = intent.getParcelableExtra(PLAYER_EXTRA)
+		me = intent.getExtra(ME_EXTRA)
+		player = intent.requireExtra(PLAYER_EXTRA)
 
 		Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(image_view)
 
@@ -87,7 +85,7 @@ class PlayerActivity: TLActivity() {
 		return super.onCreateOptionsMenu(menu)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.add_contact -> {
 			startActivity(
 				Intent(ContactsContract.Intents.Insert.ACTION)

@@ -22,9 +22,7 @@ import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.model.ServerError
-import com.romrell4.tennisladder.support.Adapter
-import com.romrell4.tennisladder.support.Callback
-import com.romrell4.tennisladder.support.TLActivity
+import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_ladder.*
 import kotlinx.android.synthetic.main.card_player.view.*
@@ -51,7 +49,7 @@ class LadderActivity: TLActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_ladder)
 
-		ladder = intent.getParcelableExtra(LADDER_EXTRA)
+		ladder = intent.requireExtra(LADDER_EXTRA)
 		title = ladder.name
 
 		swipe_refresh_layout.setOnRefreshListener { loadPlayers() }
@@ -67,7 +65,7 @@ class LadderActivity: TLActivity() {
 		return super.onCreateOptionsMenu(menu)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.rules -> {
 			val webView = WebView(this)
 			webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/rules.html")

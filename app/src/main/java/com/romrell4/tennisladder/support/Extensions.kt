@@ -1,6 +1,6 @@
 package com.romrell4.tennisladder.support
 
 import android.content.Intent
-import android.os.Parcelable
 
-fun <T: Parcelable> Intent.requireParcelableExtra(name: String): T = getParcelableExtra<T>(name) ?: throw IllegalStateException("Extra '$name' not found in extra")
+inline fun <reified T> Intent.getExtra(name: String) = extras?.get(name) as? T
+inline fun <reified T> Intent.requireExtra(name: String) = this.getExtra<T>(name) ?: throw IllegalStateException("Extra '$name' not found in extra")

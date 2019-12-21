@@ -2,13 +2,12 @@ package com.romrell4.tennisladder.controller
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.view.GravityCompat
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseApp
@@ -72,7 +71,7 @@ class MainActivity: TLActivity() {
 		}
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		android.R.id.home -> {
 			drawer_layout.openDrawer(GravityCompat.START)
 			true
@@ -101,7 +100,7 @@ class MainActivity: TLActivity() {
 		super.onActivityResult(requestCode, resultCode, data)
 
 		if (requestCode == RC_SIGN_IN) {
-			if (resultCode == AppCompatActivity.RESULT_OK) {
+			if (resultCode == RESULT_OK) {
 				onLoggedIn()
 			} else {
 				val response = IdpResponse.fromResultIntent(data)

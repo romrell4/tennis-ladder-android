@@ -1,5 +1,6 @@
 package com.romrell4.tennisladder.controller
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
@@ -13,9 +14,7 @@ import android.widget.Toast
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.User
-import com.romrell4.tennisladder.support.Adapter
-import com.romrell4.tennisladder.support.Callback
-import com.romrell4.tennisladder.support.TLActivity
+import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.card_profile_info.view.*
@@ -31,7 +30,7 @@ class ProfileActivity: TLActivity() {
 	}
 
 	private val editable
-		get() = intent.getStringExtra(MY_ID_EXTRA) == intent.getStringExtra(USER_ID_EXTRA)
+		get() = intent.getExtra<String>(MY_ID_EXTRA) == intent.getExtra<String>(USER_ID_EXTRA)
 
 	private var user: User? = null
 		set(value) {
@@ -64,10 +63,10 @@ class ProfileActivity: TLActivity() {
 		if (editable) {
 			header_text.visibility = View.VISIBLE
 			image_view.setOnClickListener {
-				showEditDialog("Photo URL") {
+				showEditDialog("Photo URL") { photoUrl ->
 					//If they didn't add a URL, default to null
-					it.takeIf { it.isNotBlank() }.let {
-						user?.photoUrl = it
+					photoUrl.takeIf { it.isNotBlank() }.let {
+						user?.photoUrl = photoUrl
 						Picasso.get().load(it).placeholder(R.drawable.ic_default_user).into(image_view)
 					}
 				}
@@ -77,7 +76,7 @@ class ProfileActivity: TLActivity() {
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
 
-		Client.api.getUser(intent.getStringExtra(USER_ID_EXTRA)).enqueue(object: Callback<User>(this) {
+		Client.api.getUser(intent.requireExtra(USER_ID_EXTRA)).enqueue(object: Callback<User>(this) {
 			override fun onSuccess(data: User) {
 				view_switcher.displayedChild = VS_LIST_INDEX
 				user = data
@@ -93,7 +92,7 @@ class ProfileActivity: TLActivity() {
 		return super.onCreateOptionsMenu(menu)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.save -> {
 			user?.let {
 				view_switcher.displayedChild = VS_SPINNER_INDEX
@@ -116,6 +115,7 @@ class ProfileActivity: TLActivity() {
 	)
 
 	private fun showEditDialog(label: String, action: (String) -> Unit) {
+		@SuppressLint("InflateParams")
 		val alertView = layoutInflater.inflate(R.layout.dialog_profile_edit_value, null)
 		val editText = alertView.edit_text
 		AlertDialog.Builder(this)
