@@ -4,6 +4,9 @@
     <string name="logout">Log Out</string>
     <string name="logged_in_text">Logged in as %1$s</string>
     <string name="not_logged_in">Not Logged In</string>
+    <string name="earned_points_text">Earned: %1$d</string>
+    <string name="borrowed_points_text">Borrowed: %1$d</string>
+    <string name="total_points_text">Total: %1$d</string>
     <string name="date_format">%1$s - %2$s</string>
     <string name="ranking_label_text">Current Ranking:</string>
     <string name="ranking_text_format">#%1$d</string>
