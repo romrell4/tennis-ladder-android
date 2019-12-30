@@ -12,3 +12,4 @@ release
 .externalNativeBuild
 google-services.json
 fastlane.json
+fastlane/report.xml
