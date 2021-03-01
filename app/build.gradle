@@ -9,8 +9,8 @@ android {
         applicationId "com.romrell4.tennisladder"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 17
-        versionName "1.6"
+        versionCode 18
+        versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
