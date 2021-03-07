@@ -194,6 +194,8 @@ class LadderActivity: TLActivity() {
 					earnedPointsText.visibility = View.GONE
 					borrowedPointsText.visibility = View.GONE
 				} else {
+					earnedPointsText.visibility = View.VISIBLE
+					borrowedPointsText.visibility = View.VISIBLE
 					earnedPointsText.text = getString(R.string.earned_points_text, player.earnedPoints)
 					borrowedPointsText.text = getString(R.string.borrowed_points_text, player.borrowedPoints)
 				}
