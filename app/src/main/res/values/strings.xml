@@ -50,4 +50,7 @@
     <string name="profile_edit_dialog_title">Edit Value</string>
     <string name="profile_edit_dialog_message">Enter new value for \'%1$s\':</string>
     <string name="save">Save</string>
+    <string name="update_player_dialog_borrowed_points_hint">Borrowed Points</string>
+    <string name="player_update_dialog_title">Update Player</string>
+    <string name="player_update_dialog_message">Please enter the new borrowed points for this player.</string>
 </resources>
