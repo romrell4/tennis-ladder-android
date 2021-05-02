@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/set1_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/set_1_label"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/one_third_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/winner_set1_score"
+        style="@style/SetEditText"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:nextFocusForward="@id/loser_set1_score"
+        app:layout_constraintEnd_toStartOf="@+id/set1_separator"
+        app:layout_constraintTop_toBottomOf="@+id/set1_label" />
+
+    <TextView
+        android:id="@+id/set1_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_separator"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
+        app:layout_constraintEnd_toEndOf="@+id/set1_label"
+        app:layout_constraintStart_toStartOf="@+id/set1_label"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+
+    <EditText
+        android:id="@+id/loser_set1_score"
+        style="@style/SetEditText"
+        android:layout_marginStart="8dp"
+        android:nextFocusForward="@id/winner_set2_score"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
+        app:layout_constraintStart_toEndOf="@+id/set1_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/one_third_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".33" />
+
+    <TextView
+        android:id="@+id/set2_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/set_2_label"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_label"
+        app:layout_constraintEnd_toStartOf="@+id/two_thirds_guideline"
+        app:layout_constraintStart_toStartOf="@+id/one_third_guideline"
+        app:layout_constraintTop_toTopOf="@+id/set1_label" />
+
+    <EditText
+        android:id="@+id/winner_set2_score"
+        style="@style/SetEditText"
+        android:layout_marginEnd="8dp"
+        android:nextFocusForward="@id/loser_set2_score"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
+        app:layout_constraintEnd_toStartOf="@+id/set2_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+
+    <TextView
+        android:id="@+id/set2_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_separator"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_separator"
+        app:layout_constraintEnd_toEndOf="@+id/set2_label"
+        app:layout_constraintStart_toStartOf="@+id/set2_label"
+        app:layout_constraintTop_toTopOf="@+id/set1_separator" />
+
+    <EditText
+        android:id="@+id/loser_set2_score"
+        style="@style/SetEditText"
+        android:layout_marginStart="8dp"
+        android:nextFocusForward="@id/winner_set3_score"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
+        app:layout_constraintStart_toEndOf="@+id/set2_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/two_thirds_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".67" />
+
+    <TextView
+        android:id="@+id/set3_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/set_3_label"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/two_thirds_guideline"
+        app:layout_constraintTop_toTopOf="@+id/set1_label"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/winner_set3_score"
+        style="@style/SetEditText"
+        android:layout_marginEnd="8dp"
+        android:nextFocusForward="@id/loser_set3_score"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
+        app:layout_constraintEnd_toStartOf="@+id/set3_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+
+    <TextView
+        android:id="@+id/set3_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_separator"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/set1_separator"
+        app:layout_constraintEnd_toEndOf="@+id/set3_label"
+        app:layout_constraintStart_toStartOf="@+id/set3_label"
+        app:layout_constraintTop_toTopOf="@+id/set1_separator"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/loser_set3_score"
+        style="@style/SetEditText"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
+        app:layout_constraintStart_toEndOf="@+id/set3_separator"
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+
+</merge>
