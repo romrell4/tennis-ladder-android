@@ -14,10 +14,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.databinding.ActivityMainBinding
 import com.romrell4.tennisladder.databinding.CardLadderBinding
+import com.romrell4.tennisladder.databinding.NavHeaderBinding
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.support.*
-import kotlinx.android.synthetic.main.nav_header.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -124,7 +124,7 @@ class MainActivity : TLActivity() {
         FirebaseAuth.getInstance().currentUser?.displayName.let {
             val text = getString(R.string.logged_in_text, it)
             supportActionBar?.subtitle = text
-            binding.navView.nav_header_subtitle?.text = text
+            NavHeaderBinding.bind(binding.navView.getHeaderView(0)).navHeaderSubtitle.text = text
         }
     }
 
@@ -135,7 +135,7 @@ class MainActivity : TLActivity() {
 
         val text = getString(R.string.not_logged_in)
         supportActionBar?.subtitle = text
-        binding.navView.nav_header_subtitle?.text = text
+        NavHeaderBinding.bind(binding.navView.getHeaderView(0)).navHeaderSubtitle.text = text
     }
 
     private inner class LadderAdapter : Adapter<Ladder>(this, R.string.no_ladders_text) {
