@@ -1,16 +1,10 @@
 package com.romrell4.tennisladder.controller
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.databinding.ActivityReportMatchBinding
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
@@ -18,8 +12,6 @@ import com.romrell4.tennisladder.support.Callback
 import com.romrell4.tennisladder.support.TLActivity
 import com.romrell4.tennisladder.support.requireExtra
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_report_match.*
-import java.lang.NumberFormatException
 
 class ReportMatchActivity : TLActivity() {
     companion object {
@@ -28,24 +20,25 @@ class ReportMatchActivity : TLActivity() {
         const val OPPONENT_EXTRA = "opp-match-player"
     }
 
+    private lateinit var binding: ActivityReportMatchBinding
+
     private lateinit var me: Player
     private lateinit var opponent: Player
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_report_match)
+        setContentView(ActivityReportMatchBinding.inflate(layoutInflater).also { binding = it }.root)
 
         me = intent.requireExtra(ME_EXTRA)
         opponent = intent.requireExtra(OPPONENT_EXTRA)
 
-        me_name_text.text = me.user.name
-        opponent_name_text.text = opponent.user.name
+        binding.meNameText.text = me.user.name
+        binding.opponentNameText.text = opponent.user.name
 
-        Picasso.get().load(me.user.photoUrl).placeholder(R.drawable.ic_default_user).into(me_image)
-        Picasso.get().load(opponent.user.photoUrl).placeholder(R.drawable.ic_default_user)
-            .into(opponent_image)
+        Picasso.get().load(me.user.photoUrl).placeholder(R.drawable.ic_default_user).into(binding.meImage)
+        Picasso.get().load(opponent.user.photoUrl).placeholder(R.drawable.ic_default_user).into(binding.opponentImage)
 
-        button.setOnClickListener {
+        binding.button.setOnClickListener {
             try {
                 val match = getMatch()
                 AlertDialog.Builder(this)
@@ -84,7 +77,7 @@ class ReportMatchActivity : TLActivity() {
     }
 
     private fun getMatch(): Match {
-        return scores_view.getMatchScores().apply(
+        return binding.scoresView.getMatchScores().apply(
             Match(
                 ladderId = me.ladderId,
                 winner = me,
