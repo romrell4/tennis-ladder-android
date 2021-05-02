@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.card_match.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+private const val VS_LOADING_INDEX = 0
 private const val VS_LIST_INDEX = 1
 private val MATCH_DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 
@@ -174,14 +175,16 @@ class PlayerActivity : TLActivity() {
                             .setView(dialogView)
                             .setPositiveButton(R.string.save) { _, _ ->
                                 val updatedMatch = dialogView.getMatchScores().apply(match)
+                                view_switcher.displayedChild = VS_LOADING_INDEX
                                 Client.api.updateMatchScores(
                                     ladderId = updatedMatch.ladderId,
                                     matchId = updatedMatch.matchId,
                                     match = updatedMatch
                                 ).enqueue(object : Callback<Match>(this@PlayerActivity) {
                                     override fun onSuccess(data: Match) {
+                                        view_switcher.displayedChild = VS_LIST_INDEX
                                         adapter.list = adapter.list.mapIndexed { index, match ->
-                                            if (index == adapterPosition) data else match
+                                            if (index == absoluteAdapterPosition) data else match
                                         }
                                     }
                                 })
