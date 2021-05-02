@@ -12,14 +12,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.databinding.ActivityPlayerBinding
+import com.romrell4.tennisladder.databinding.CardMatchBinding
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_player.*
-import kotlinx.android.synthetic.main.card_match.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,25 +34,27 @@ class PlayerActivity : TLActivity() {
         const val PLAYER_EXTRA = "player"
     }
 
+    private lateinit var binding: ActivityPlayerBinding
+
     private var me: Player? = null
     private lateinit var player: Player
     private val adapter = MatchAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+        setContentView(ActivityPlayerBinding.inflate(layoutInflater).also { binding = it }.root)
 
         me = intent.getExtra(ME_EXTRA)
         player = intent.requireExtra(PLAYER_EXTRA)
 
-        Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(image_view)
+        Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(binding.imageView)
 
         title = player.user.name
-        ranking_text.text = getString(R.string.ranking_text_format, player.ranking)
-        record_text.text = getString(R.string.record_text_format, player.wins, player.losses)
+        binding.rankingText.text = getString(R.string.ranking_text_format, player.ranking)
+        binding.recordText.text = getString(R.string.record_text_format, player.wins, player.losses)
 
-        challenge_button.visibility = if (me != null && player != me) View.VISIBLE else View.GONE
-        challenge_button.setOnClickListener { _ ->
+        binding.challengeButton.visibility = if (me != null && player != me) View.VISIBLE else View.GONE
+        binding.challengeButton.setOnClickListener { _ ->
             data class ContactOption(val title: String, val value: String?, val intent: Intent)
 
             val contactOptions = listOf(
@@ -87,8 +90,8 @@ class PlayerActivity : TLActivity() {
             }
         }
 
-        recycler_view.layoutManager = LinearLayoutManager(this@PlayerActivity)
-        recycler_view.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(this@PlayerActivity)
+        binding.recyclerView.adapter = adapter
 
         loadMatches()
     }
@@ -136,7 +139,7 @@ class PlayerActivity : TLActivity() {
     private fun loadMatches() {
         Client.api.getMatches(player.ladderId, player.user.userId).enqueue(object : Callback<List<Match>>(this) {
             override fun onSuccess(data: List<Match>) {
-                view_switcher.displayedChild = VS_LIST_INDEX
+                binding.viewSwitcher.displayedChild = VS_LIST_INDEX
                 adapter.list = data
             }
         })
@@ -144,22 +147,18 @@ class PlayerActivity : TLActivity() {
 
     private inner class MatchAdapter : Adapter<Match>(this, R.string.no_matches_text) {
         override fun createViewHolder(parent: ViewGroup) =
-            MatchViewHolder(layoutInflater.inflate(R.layout.card_match, parent, false))
+            MatchViewHolder(CardMatchBinding.inflate(layoutInflater, parent, false))
 
         override fun bind(viewHolder: RecyclerView.ViewHolder, item: Match) {
             (viewHolder as? MatchViewHolder)?.bind(item)
         }
 
-        private inner class MatchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            private val nameText = view.name_text
-            private val dateText = view.date_text
-            private val scoreText = view.score_text
-
+        private inner class MatchViewHolder(private val cardBinding: CardMatchBinding) : RecyclerView.ViewHolder(cardBinding.root) {
             fun bind(match: Match) {
-                nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
-                dateText.text = MATCH_DATE_FORMAT.format(match.matchDate)
-                scoreText.text = match.scoreText(player)
-                scoreText.setTextColor(
+                cardBinding.nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
+                cardBinding.dateText.text = MATCH_DATE_FORMAT.format(match.matchDate)
+                cardBinding.scoreText.text = match.scoreText(player)
+                cardBinding.scoreText.setTextColor(
                     ContextCompat.getColor(
                         this@PlayerActivity,
                         if (match.winner == player) R.color.matchWinner else R.color.matchLoser
@@ -175,14 +174,14 @@ class PlayerActivity : TLActivity() {
                             .setView(dialogView)
                             .setPositiveButton(R.string.save) { _, _ ->
                                 val updatedMatch = dialogView.getMatchScores().apply(match)
-                                view_switcher.displayedChild = VS_LOADING_INDEX
+                                binding.viewSwitcher.displayedChild = VS_LOADING_INDEX
                                 Client.api.updateMatchScores(
                                     ladderId = updatedMatch.ladderId,
                                     matchId = updatedMatch.matchId,
                                     match = updatedMatch
                                 ).enqueue(object : Callback<Match>(this@PlayerActivity) {
                                     override fun onSuccess(data: Match) {
-                                        view_switcher.displayedChild = VS_LIST_INDEX
+                                        binding.viewSwitcher.displayedChild = VS_LIST_INDEX
                                         adapter.list = adapter.list.mapIndexed { index, match ->
                                             if (index == adapterPosition) data else match
                                         }

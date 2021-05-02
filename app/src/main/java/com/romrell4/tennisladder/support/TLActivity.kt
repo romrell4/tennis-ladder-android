@@ -1,12 +1,11 @@
 package com.romrell4.tennisladder.support
 
 import android.annotation.SuppressLint
-import androidx.annotation.LayoutRes
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
-import kotlinx.android.synthetic.main.toolbar.view.*
 
 @SuppressLint("Registered")
 open class TLActivity: AppCompatActivity() {
@@ -17,9 +16,8 @@ open class TLActivity: AppCompatActivity() {
 		supportActionBar?.title = title
 	}
 
-	override fun setContentView(@LayoutRes layoutResID: Int) {
-		val view = layoutInflater.inflate(layoutResID, null)
-		setSupportActionBar(view.toolbar)
+	override fun setContentView(view: View) {
+		setSupportActionBar(view.findViewById(R.id.toolbar))
 		super.setContentView(view)
 	}
 

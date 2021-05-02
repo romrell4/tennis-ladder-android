@@ -18,15 +18,16 @@ import android.widget.Toast
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.romrell4.tennisladder.R
+import com.romrell4.tennisladder.databinding.ActivityLadderBinding
+import com.romrell4.tennisladder.databinding.CardPlayerBinding
+import com.romrell4.tennisladder.databinding.DialogLadderInviteBinding
+import com.romrell4.tennisladder.databinding.DialogUpdatePlayerBinding
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.model.ServerError
 import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_ladder.*
-import kotlinx.android.synthetic.main.card_player.view.*
-import kotlinx.android.synthetic.main.dialog_update_player.view.*
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -39,6 +40,8 @@ class LadderActivity : TLActivity() {
         const val LADDER_EXTRA = "ladder"
     }
 
+    private lateinit var binding: ActivityLadderBinding
+
     private lateinit var ladder: Ladder
     private val me: Player?
         get() = adapter.list.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
@@ -46,15 +49,15 @@ class LadderActivity : TLActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ladder)
+        setContentView(ActivityLadderBinding.inflate(layoutInflater).also { binding = it }.root)
 
         ladder = intent.requireExtra(LADDER_EXTRA)
         title = ladder.name
 
-        swipe_refresh_layout.setOnRefreshListener { loadPlayers() }
+        binding.swipeRefreshLayout.setOnRefreshListener { loadPlayers() }
 
-        recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
 
         loadPlayers()
     }
@@ -96,7 +99,7 @@ class LadderActivity : TLActivity() {
         when {
             //The user is logged in AND is in the ladder already
             me != null -> {
-                report_match_button.setup(R.string.report_match_button_text) {
+                binding.reportMatchButton.setup(R.string.report_match_button_text) {
                     val players = adapter.list.filter { it != me }.sortedBy { it.user.name.toLowerCase(Locale.getDefault()) }
                     var selectedPlayer: Player? = null
                     AlertDialog.Builder(this@LadderActivity)
@@ -120,26 +123,26 @@ class LadderActivity : TLActivity() {
             }
             //The user is logged in, but is not in the ladder yet
             FirebaseAuth.getInstance().currentUser != null -> {
-                report_match_button.setup(R.string.request_ladder_invite_text) {
+                binding.reportMatchButton.setup(R.string.request_ladder_invite_text) {
                     @SuppressLint("InflateParams")
-                    val alertView = layoutInflater.inflate(R.layout.dialog_ladder_invite, null)
-                    val editText = alertView.edit_text
+                    val alertViewBinding = DialogLadderInviteBinding.inflate(layoutInflater, null, false)
+                    val editText = alertViewBinding.editText
                     AlertDialog.Builder(this)
                         .setTitle(getString(R.string.ladder_invite_dialog_title))
                         .setMessage(getString(R.string.ladder_invite_dialog_message))
-                        .setView(alertView)
+                        .setView(alertViewBinding.root)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
-                            view_switcher.displayedChild = VS_SPINNER_INDEX
+                            binding.viewSwitcher.displayedChild = VS_SPINNER_INDEX
                             Client.api.addPlayerToLadder(ladder.ladderId, editText.text.toString()).enqueue(object : Callback<List<Player>>(this) {
                                 override fun onSuccess(data: List<Player>) {
-                                    view_switcher.displayedChild = VS_LIST_INDEX
+                                    binding.viewSwitcher.displayedChild = VS_LIST_INDEX
                                     loadBottomButton()
                                     adapter.list = data
                                     Toast.makeText(this@LadderActivity, getString(R.string.ladder_invite_success_message), Toast.LENGTH_SHORT).show()
                                 }
 
                                 override fun onError(error: ServerError?, t: Throwable) {
-                                    view_switcher.displayedChild = VS_LIST_INDEX
+                                    binding.viewSwitcher.displayedChild = VS_LIST_INDEX
                                     AlertDialog.Builder(this@LadderActivity)
                                         .setTitle(getString(R.string.error))
                                         .setMessage(error?.error ?: t.message)
@@ -154,7 +157,7 @@ class LadderActivity : TLActivity() {
             }
             //The user is not logged in
             else -> {
-                report_match_button.setup(R.string.login_to_report_match_button_text) {
+                binding.reportMatchButton.setup(R.string.login_to_report_match_button_text) {
                     startLoginActivity()
                 }
             }
@@ -170,8 +173,8 @@ class LadderActivity : TLActivity() {
     private fun loadPlayers() {
         Client.api.getPlayers(ladder.ladderId).enqueue(object : Callback<List<Player>>(this) {
             override fun onSuccess(data: List<Player>) {
-                view_switcher.displayedChild = VS_LIST_INDEX
-                swipe_refresh_layout.isRefreshing = false
+                binding.viewSwitcher.displayedChild = VS_LIST_INDEX
+                binding.swipeRefreshLayout.isRefreshing = false
                 adapter.list = data
                 loadBottomButton()
             }
@@ -179,35 +182,29 @@ class LadderActivity : TLActivity() {
     }
 
     private inner class PlayerAdapter : Adapter<Player>(this, R.string.no_players_text) {
-        override fun createViewHolder(parent: ViewGroup) = PlayerViewHolder(layoutInflater.inflate(R.layout.card_player, parent, false))
+        override fun createViewHolder(parent: ViewGroup) = PlayerViewHolder(CardPlayerBinding.inflate(layoutInflater, parent, false))
         override fun bind(viewHolder: RecyclerView.ViewHolder, item: Player) {
             (viewHolder as? PlayerViewHolder)?.bind(item)
         }
 
-        private inner class PlayerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            private val card = view.card
-            private val profileImage = view.profile_image
-            private val nameText = view.name_text
-            private val earnedPointsText = view.earned_points
-            private val borrowedPointsText = view.borrowed_points
-            private val scoreText = view.score_text
+        private inner class PlayerViewHolder(private val cardBinding: CardPlayerBinding) : RecyclerView.ViewHolder(cardBinding.root) {
 
             fun bind(player: Player) {
-                nameText.text = player.user.name
+                cardBinding.nameText.text = player.user.name
                 if (player.borrowedPoints == 0) {
-                    earnedPointsText.visibility = View.GONE
-                    borrowedPointsText.visibility = View.GONE
+                    cardBinding.earnedPoints.visibility = View.GONE
+                    cardBinding.borrowedPoints.visibility = View.GONE
                 } else {
-                    earnedPointsText.visibility = View.VISIBLE
-                    borrowedPointsText.visibility = View.VISIBLE
-                    earnedPointsText.text = getString(R.string.earned_points_text, player.earnedPoints)
-                    borrowedPointsText.text = getString(R.string.borrowed_points_text, player.borrowedPoints)
+                    cardBinding.earnedPoints.visibility = View.VISIBLE
+                    cardBinding.borrowedPoints.visibility = View.VISIBLE
+                    cardBinding.earnedPoints.text = getString(R.string.earned_points_text, player.earnedPoints)
+                    cardBinding.borrowedPoints.text = getString(R.string.borrowed_points_text, player.borrowedPoints)
                 }
-                scoreText.text = getString(R.string.total_points_text, player.score)
+                cardBinding.scoreText.text = getString(R.string.total_points_text, player.score)
 
-                Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(profileImage)
+                Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(cardBinding.profileImage)
 
-                card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, if (player == me) R.color.meCardColor else R.color.white))
+                cardBinding.card.setBackgroundColor(ContextCompat.getColor(this@LadderActivity, if (player == me) R.color.meCardColor else R.color.white))
 
                 itemView.setOnClickListener {
                     startActivity(
@@ -220,21 +217,20 @@ class LadderActivity : TLActivity() {
                 itemView.setOnLongClickListener {
                     // If the user is part of the ladder, we can shortcut if we know they aren't an admin
                     if (me?.user?.admin != false && FirebaseAuth.getInstance().currentUser != null) {
-                        @SuppressLint("InflateParams")
-                        val alertView = layoutInflater.inflate(R.layout.dialog_update_player, null)
-                        val editText = alertView.edit_text
+                        val alertBinding = DialogUpdatePlayerBinding.inflate(layoutInflater, null, false)
+                        val editText = alertBinding.editText
                         AlertDialog.Builder(this@LadderActivity)
                             .setTitle(R.string.player_update_dialog_title)
                             .setMessage(R.string.player_update_dialog_message)
-                            .setView(alertView)
+                            .setView(alertBinding.root)
                             .setPositiveButton(android.R.string.ok) { _, _ ->
                                 editText.text.toString().toIntOrNull()?.let { newBorrowedPoints ->
                                     val newPlayer = player.copy(borrowedPoints = newBorrowedPoints)
-                                    swipe_refresh_layout.isRefreshing = true
+                                    binding.swipeRefreshLayout.isRefreshing = true
                                     Client.api.updatePlayer(ladder.ladderId, player.user.userId, newPlayer).enqueue(object : Callback<List<Player>>(this@LadderActivity) {
                                         override fun onResponse(call: Call<List<Player>>, response: Response<List<Player>>) {
                                             super.onResponse(call, response)
-                                            swipe_refresh_layout.isRefreshing = false
+                                            binding.swipeRefreshLayout.isRefreshing = false
                                         }
 
                                         override fun onSuccess(data: List<Player>) {
