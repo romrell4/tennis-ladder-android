@@ -25,9 +25,11 @@
         style="@style/SetEditText"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:importantForAutofill="no"
         android:nextFocusForward="@id/loser_set1_score"
         app:layout_constraintEnd_toStartOf="@+id/set1_separator"
-        app:layout_constraintTop_toBottomOf="@+id/set1_label" />
+        app:layout_constraintTop_toBottomOf="@+id/set1_label"
+        tools:ignore="LabelFor" />
 
     <TextView
         android:id="@+id/set1_separator"
@@ -44,10 +46,12 @@
         android:id="@+id/loser_set1_score"
         style="@style/SetEditText"
         android:layout_marginStart="8dp"
+        android:importantForAutofill="no"
         android:nextFocusForward="@id/winner_set2_score"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
         app:layout_constraintStart_toEndOf="@+id/set1_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score"
+        tools:ignore="LabelFor" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/one_third_guideline"
@@ -74,10 +78,12 @@
         android:id="@+id/winner_set2_score"
         style="@style/SetEditText"
         android:layout_marginEnd="8dp"
+        android:importantForAutofill="no"
         android:nextFocusForward="@id/loser_set2_score"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
         app:layout_constraintEnd_toStartOf="@+id/set2_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score"
+        tools:ignore="LabelFor" />
 
     <TextView
         android:id="@+id/set2_separator"
@@ -94,10 +100,12 @@
         android:id="@+id/loser_set2_score"
         style="@style/SetEditText"
         android:layout_marginStart="8dp"
+        android:importantForAutofill="no"
         android:nextFocusForward="@id/winner_set3_score"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
         app:layout_constraintStart_toEndOf="@+id/set2_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score"
+        tools:ignore="LabelFor" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/two_thirds_guideline"
@@ -125,10 +133,12 @@
         android:id="@+id/winner_set3_score"
         style="@style/SetEditText"
         android:layout_marginEnd="8dp"
+        android:importantForAutofill="no"
         android:nextFocusForward="@id/loser_set3_score"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
         app:layout_constraintEnd_toStartOf="@+id/set3_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score"
+        tools:ignore="LabelFor" />
 
     <TextView
         android:id="@+id/set3_separator"
@@ -146,8 +156,10 @@
         android:id="@+id/loser_set3_score"
         style="@style/SetEditText"
         android:layout_marginStart="8dp"
+        android:importantForAutofill="no"
         app:layout_constraintBottom_toBottomOf="@+id/winner_set1_score"
         app:layout_constraintStart_toEndOf="@+id/set3_separator"
-        app:layout_constraintTop_toTopOf="@+id/winner_set1_score" />
+        app:layout_constraintTop_toTopOf="@+id/winner_set1_score"
+        tools:ignore="LabelFor" />
 
 </merge>

@@ -184,7 +184,7 @@ class PlayerActivity : TLActivity() {
                                     override fun onSuccess(data: Match) {
                                         view_switcher.displayedChild = VS_LIST_INDEX
                                         adapter.list = adapter.list.mapIndexed { index, match ->
-                                            if (index == absoluteAdapterPosition) data else match
+                                            if (index == adapterPosition) data else match
                                         }
                                     }
                                 })
