@@ -70,9 +70,9 @@ class LadderActivity : TLActivity() {
             webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/rules.html")
 
             AlertDialog.Builder(this)
-                    .setView(webView)
-                    .setNeutralButton(android.R.string.ok, null)
-                    .show()
+                .setView(webView)
+                .setNeutralButton(android.R.string.ok, null)
+                .show()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -100,19 +100,22 @@ class LadderActivity : TLActivity() {
                     val players = adapter.list.filter { it != me }.sortedBy { it.user.name.toLowerCase(Locale.getDefault()) }
                     var selectedPlayer: Player? = null
                     AlertDialog.Builder(this@LadderActivity)
-                            .setTitle(R.string.report_match_dialog_title)
-                            .setSingleChoiceItems(players.map { it.user.name }.toTypedArray(), -1) { _, index ->
-                                selectedPlayer = players[index]
-                            }.setPositiveButton("Select") { _, _ ->
-                                selectedPlayer?.let {
-                                    startActivityForResult(
-                                            Intent(this@LadderActivity, ReportMatchActivity::class.java)
-                                                    .putExtra(ReportMatchActivity.ME_EXTRA, me)
-                                                    .putExtra(ReportMatchActivity.OPPONENT_EXTRA, it),
-                                            ReportMatchActivity.RC_MATCH_REPORTED
-                                    )
-                                }
-                            }.setNegativeButton("Cancel", null).show()
+                        .setTitle(R.string.report_match_dialog_title)
+                        .setSingleChoiceItems(players.map { it.user.name }.toTypedArray(), -1) { _, index ->
+                            selectedPlayer = players[index]
+                        }
+                        .setPositiveButton("Select") { _, _ ->
+                            selectedPlayer?.let {
+                                startActivityForResult(
+                                    Intent(this@LadderActivity, ReportMatchActivity::class.java)
+                                        .putExtra(ReportMatchActivity.ME_EXTRA, me)
+                                        .putExtra(ReportMatchActivity.OPPONENT_EXTRA, it),
+                                    ReportMatchActivity.RC_MATCH_REPORTED
+                                )
+                            }
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
                 }
             }
             //The user is logged in, but is not in the ladder yet
@@ -122,31 +125,31 @@ class LadderActivity : TLActivity() {
                     val alertView = layoutInflater.inflate(R.layout.dialog_ladder_invite, null)
                     val editText = alertView.edit_text
                     AlertDialog.Builder(this)
-                            .setTitle(getString(R.string.ladder_invite_dialog_title))
-                            .setMessage(getString(R.string.ladder_invite_dialog_message))
-                            .setView(alertView)
-                            .setPositiveButton(android.R.string.ok) { _, _ ->
-                                view_switcher.displayedChild = VS_SPINNER_INDEX
-                                Client.api.addPlayerToLadder(ladder.ladderId, editText.text.toString()).enqueue(object : Callback<List<Player>>(this) {
-                                    override fun onSuccess(data: List<Player>) {
-                                        view_switcher.displayedChild = VS_LIST_INDEX
-                                        loadBottomButton()
-                                        adapter.list = data
-                                        Toast.makeText(this@LadderActivity, getString(R.string.ladder_invite_success_message), Toast.LENGTH_SHORT).show()
-                                    }
+                        .setTitle(getString(R.string.ladder_invite_dialog_title))
+                        .setMessage(getString(R.string.ladder_invite_dialog_message))
+                        .setView(alertView)
+                        .setPositiveButton(android.R.string.ok) { _, _ ->
+                            view_switcher.displayedChild = VS_SPINNER_INDEX
+                            Client.api.addPlayerToLadder(ladder.ladderId, editText.text.toString()).enqueue(object : Callback<List<Player>>(this) {
+                                override fun onSuccess(data: List<Player>) {
+                                    view_switcher.displayedChild = VS_LIST_INDEX
+                                    loadBottomButton()
+                                    adapter.list = data
+                                    Toast.makeText(this@LadderActivity, getString(R.string.ladder_invite_success_message), Toast.LENGTH_SHORT).show()
+                                }
 
-                                    override fun onError(error: ServerError?, t: Throwable) {
-                                        view_switcher.displayedChild = VS_LIST_INDEX
-                                        AlertDialog.Builder(this@LadderActivity)
-                                                .setTitle(getString(R.string.error))
-                                                .setMessage(error?.error ?: t.message)
-                                                .setNeutralButton(android.R.string.ok, null)
-                                                .show()
-                                    }
-                                })
-                            }
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .show()
+                                override fun onError(error: ServerError?, t: Throwable) {
+                                    view_switcher.displayedChild = VS_LIST_INDEX
+                                    AlertDialog.Builder(this@LadderActivity)
+                                        .setTitle(getString(R.string.error))
+                                        .setMessage(error?.error ?: t.message)
+                                        .setNeutralButton(android.R.string.ok, null)
+                                        .show()
+                                }
+                            })
+                        }
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show()
                 }
             }
             //The user is not logged in
@@ -169,8 +172,8 @@ class LadderActivity : TLActivity() {
             override fun onSuccess(data: List<Player>) {
                 view_switcher.displayedChild = VS_LIST_INDEX
                 swipe_refresh_layout.isRefreshing = false
-                loadBottomButton()
                 adapter.list = data
+                loadBottomButton()
             }
         })
     }
@@ -208,9 +211,9 @@ class LadderActivity : TLActivity() {
 
                 itemView.setOnClickListener {
                     startActivity(
-                            Intent(this@LadderActivity, PlayerActivity::class.java)
-                                    .putExtra(PlayerActivity.ME_EXTRA, me)
-                                    .putExtra(PlayerActivity.PLAYER_EXTRA, player)
+                        Intent(this@LadderActivity, PlayerActivity::class.java)
+                            .putExtra(PlayerActivity.ME_EXTRA, me)
+                            .putExtra(PlayerActivity.PLAYER_EXTRA, player)
                     )
                 }
 
@@ -221,28 +224,28 @@ class LadderActivity : TLActivity() {
                         val alertView = layoutInflater.inflate(R.layout.dialog_update_player, null)
                         val editText = alertView.edit_text
                         AlertDialog.Builder(this@LadderActivity)
-                                .setTitle(R.string.player_update_dialog_title)
-                                .setMessage(R.string.player_update_dialog_message)
-                                .setView(alertView)
-                                .setPositiveButton(android.R.string.ok) { _, _ ->
-                                    editText.text.toString().toIntOrNull()?.let { newBorrowedPoints ->
-                                        val newPlayer = player.copy(borrowedPoints = newBorrowedPoints)
-                                        swipe_refresh_layout.isRefreshing = true
-                                        Client.api.updatePlayer(ladder.ladderId, player.user.userId, newPlayer).enqueue(object : Callback<List<Player>>(this@LadderActivity) {
-                                            override fun onResponse(call: Call<List<Player>>, response: Response<List<Player>>) {
-                                                super.onResponse(call, response)
-                                                swipe_refresh_layout.isRefreshing = false
-                                            }
+                            .setTitle(R.string.player_update_dialog_title)
+                            .setMessage(R.string.player_update_dialog_message)
+                            .setView(alertView)
+                            .setPositiveButton(android.R.string.ok) { _, _ ->
+                                editText.text.toString().toIntOrNull()?.let { newBorrowedPoints ->
+                                    val newPlayer = player.copy(borrowedPoints = newBorrowedPoints)
+                                    swipe_refresh_layout.isRefreshing = true
+                                    Client.api.updatePlayer(ladder.ladderId, player.user.userId, newPlayer).enqueue(object : Callback<List<Player>>(this@LadderActivity) {
+                                        override fun onResponse(call: Call<List<Player>>, response: Response<List<Player>>) {
+                                            super.onResponse(call, response)
+                                            swipe_refresh_layout.isRefreshing = false
+                                        }
 
-                                            override fun onSuccess(data: List<Player>) {
-                                                loadBottomButton()
-                                                adapter.list = data
-                                            }
-                                        })
-                                    }
+                                        override fun onSuccess(data: List<Player>) {
+                                            loadBottomButton()
+                                            adapter.list = data
+                                        }
+                                    })
                                 }
-                                .setNegativeButton(android.R.string.cancel, null)
-                                .show()
+                            }
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show()
                         true
                     } else false
                 }

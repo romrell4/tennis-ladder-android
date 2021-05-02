@@ -73,5 +73,8 @@ class Client {
 
 		@POST("ladders/{ladder_id}/matches")
 		fun reportMatch(@Path("ladder_id") ladderId: Int, @Body match: Match): Call<Match>
+
+		@PUT("ladders/{ladder_id}/matches/{match_id}")
+		fun updateMatchScores(@Path("ladder_id") ladderId: Int, @Path("match_id") matchId: Int, @Body match: Match): Call<Match>
 	}
 }

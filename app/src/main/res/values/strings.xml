@@ -53,4 +53,5 @@
     <string name="update_player_dialog_borrowed_points_hint">Borrowed Points</string>
     <string name="player_update_dialog_title">Update Player</string>
     <string name="player_update_dialog_message">Please enter the new borrowed points for this player.</string>
+    <string name="edit_match_dialog_title">Edit Match Scores</string>
 </resources>
