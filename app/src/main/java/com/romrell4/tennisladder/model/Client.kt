@@ -6,6 +6,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -76,5 +77,8 @@ class Client {
 
 		@PUT("ladders/{ladder_id}/matches/{match_id}")
 		fun updateMatchScores(@Path("ladder_id") ladderId: Int, @Path("match_id") matchId: Int, @Body match: Match): Call<Match>
+
+		@DELETE("ladders/{ladder_id}/matches/{match_id}")
+		fun deleteMatch(@Path("ladder_id") ladderId: Int, @Path("match_id") matchId: Int): Call<ResponseBody>
 	}
 }

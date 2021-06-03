@@ -55,4 +55,5 @@
     <string name="player_update_dialog_title">Update Player</string>
     <string name="player_update_dialog_message">Please enter the new borrowed points for this player.</string>
     <string name="edit_match_dialog_title">Edit Match Scores</string>
+    <string name="match_options_title">What would you like to do with this match?</string>
 </resources>

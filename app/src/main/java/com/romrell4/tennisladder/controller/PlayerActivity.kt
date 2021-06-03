@@ -21,6 +21,7 @@ import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
+import okhttp3.ResponseBody
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -166,32 +167,54 @@ class PlayerActivity : TLActivity() {
                 )
                 if (me?.user?.admin != false) {
                     itemView.setOnClickListener {
-                        val dialogView = EnterMatchScoresView(context = this@PlayerActivity).also {
-                            it.setMatch(match)
-                        }
                         AlertDialog.Builder(this@PlayerActivity)
-                            .setTitle(R.string.edit_match_dialog_title)
-                            .setView(dialogView)
-                            .setPositiveButton(R.string.save) { _, _ ->
-                                val updatedMatch = dialogView.getMatchScores().apply(match)
-                                binding.viewSwitcher.displayedChild = VS_LOADING_INDEX
-                                Client.api.updateMatchScores(
-                                    ladderId = updatedMatch.ladderId,
-                                    matchId = updatedMatch.matchId,
-                                    match = updatedMatch
-                                ).enqueue(object : Callback<Match>(this@PlayerActivity) {
-                                    override fun onSuccess(data: Match) {
-                                        binding.viewSwitcher.displayedChild = VS_LIST_INDEX
-                                        adapter.list = adapter.list.mapIndexed { index, match ->
-                                            if (index == absoluteAdapterPosition) data else match
-                                        }
-                                    }
-                                })
+                            .setTitle(R.string.match_options_title)
+                            .setItems(arrayOf("Edit Scores", "Delete")) { _, which ->
+                                when (which) {
+                                    0 -> editMatchScores(match)
+                                    1 -> deleteMatch(match)
+                                }
                             }
-                            .setNegativeButton(android.R.string.cancel, null)
                             .show()
                     }
                 }
+            }
+
+            fun editMatchScores(match: Match) {
+                val dialogView = EnterMatchScoresView(context = this@PlayerActivity).also {
+                    it.setMatch(match)
+                }
+                AlertDialog.Builder(this@PlayerActivity)
+                    .setTitle(R.string.edit_match_dialog_title)
+                    .setView(dialogView)
+                    .setPositiveButton(R.string.save) { _, _ ->
+                        val updatedMatch = dialogView.getMatchScores().apply(match)
+                        binding.viewSwitcher.displayedChild = VS_LOADING_INDEX
+                        Client.api.updateMatchScores(
+                            ladderId = updatedMatch.ladderId,
+                            matchId = updatedMatch.matchId,
+                            match = updatedMatch
+                        ).enqueue(object : Callback<Match>(this@PlayerActivity) {
+                            override fun onSuccess(data: Match) {
+                                binding.viewSwitcher.displayedChild = VS_LIST_INDEX
+                                adapter.list = adapter.list.mapIndexed { index, match ->
+                                    if (index == absoluteAdapterPosition) data else match
+                                }
+                            }
+                        })
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            }
+
+            fun deleteMatch(match: Match) {
+                binding.viewSwitcher.displayedChild = VS_LOADING_INDEX
+                Client.api.deleteMatch(match.ladderId, match.matchId).enqueue(object : Callback<ResponseBody>(this@PlayerActivity) {
+                    override fun onSuccess(data: ResponseBody) {
+                        binding.viewSwitcher.displayedChild = VS_LIST_INDEX
+                        adapter.list = adapter.list.filterIndexed { index, _ -> index != absoluteAdapterPosition }
+                    }
+                })
             }
         }
     }
