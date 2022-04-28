@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/rules"
-        android:title="@string/rules_menu_title"
-        app:showAsAction="always" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/save_player_positions"
+        android:title="@string/save_player_order_menu_title" />
+
+    <item android:id="@+id/generate_borrowed_points"
+        android:title="@string/generate_borrowed_points_menu" />
 </menu>

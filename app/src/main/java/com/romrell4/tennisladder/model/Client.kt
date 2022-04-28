@@ -66,6 +66,9 @@ class Client {
 		@POST("ladders/{ladder_id}/players")
 		fun addPlayerToLadder(@Path("ladder_id") ladderId: Int, @Query("code") code: String): Call<List<Player>>
 
+		@PUT("ladders/{ladder_id}/players")
+		fun updatePlayerOrder(@Path("ladder_id") ladderId: Int, @Query("generate_borrowed_points") generateBorrowedPoints: Boolean, @Body players: List<Player>): Call<List<Player>>
+
 		@PUT("ladders/{ladder_id}/players/{user_id}")
 		fun updatePlayer(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String, @Body player: Player): Call<List<Player>>
 

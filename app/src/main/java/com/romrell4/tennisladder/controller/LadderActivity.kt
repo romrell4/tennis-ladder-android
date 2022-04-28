@@ -3,18 +3,17 @@ package com.romrell4.tennisladder.controller
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
 import android.widget.Button
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.romrell4.tennisladder.R
@@ -22,10 +21,7 @@ import com.romrell4.tennisladder.databinding.ActivityLadderBinding
 import com.romrell4.tennisladder.databinding.CardPlayerBinding
 import com.romrell4.tennisladder.databinding.DialogLadderInviteBinding
 import com.romrell4.tennisladder.databinding.DialogUpdatePlayerBinding
-import com.romrell4.tennisladder.model.Client
-import com.romrell4.tennisladder.model.Ladder
-import com.romrell4.tennisladder.model.Player
-import com.romrell4.tennisladder.model.ServerError
+import com.romrell4.tennisladder.model.*
 import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -45,7 +41,51 @@ class LadderActivity : TLActivity() {
     private lateinit var ladder: Ladder
     private val me: Player?
         get() = adapter.list.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
+    private var isAdmin = false
+        set(value) {
+            field = value
+            invalidateOptionsMenu()
+        }
     private val adapter = PlayerAdapter()
+    private val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.START or ItemTouchHelper.END) {
+        override fun isLongPressDragEnabled() = isAdmin && ladder.startDate.after(Date())
+        override fun isItemViewSwipeEnabled() = isAdmin && ladder.startDate.before(Date())
+
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            adapter.onMove(viewHolder.bindingAdapterPosition, target.bindingAdapterPosition)
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val alertBinding = DialogUpdatePlayerBinding.inflate(layoutInflater, null, false)
+            val editText = alertBinding.editText
+            val player = adapter.list[viewHolder.bindingAdapterPosition]
+            AlertDialog.Builder(this@LadderActivity)
+                .setTitle(R.string.player_update_dialog_title)
+                .setMessage(getString(R.string.player_update_dialog_message, player.user.name))
+                .setView(alertBinding.root)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    editText.text.toString().toIntOrNull()?.let { newBorrowedPoints ->
+                        val newPlayer = player.copy(borrowedPoints = newBorrowedPoints)
+                        binding.swipeRefreshLayout.isRefreshing = true
+                        Client.api.updatePlayer(ladder.ladderId, player.user.userId, newPlayer).enqueue(object : Callback<List<Player>>(this@LadderActivity) {
+                            override fun onResponse(call: Call<List<Player>>, response: Response<List<Player>>) {
+                                super.onResponse(call, response)
+                                binding.swipeRefreshLayout.isRefreshing = false
+                            }
+
+                            override fun onSuccess(data: List<Player>) {
+                                loadBottomButton()
+                                adapter.list = data
+                            }
+                        })
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+            adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,26 +96,26 @@ class LadderActivity : TLActivity() {
 
         binding.swipeRefreshLayout.setOnRefreshListener { loadPlayers() }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
-
+        touchHelper.attachToRecyclerView(binding.recyclerView)
         loadPlayers()
+        loadUser()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.ladders_menu, menu)
+        if (isAdmin) {
+            menuInflater.inflate(R.menu.ladders_menu, menu)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.rules -> {
-            val webView = WebView(this)
-            webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/rules.html")
-
-            AlertDialog.Builder(this)
-                .setView(webView)
-                .setNeutralButton(android.R.string.ok, null)
-                .show()
+        R.id.save_player_positions -> {
+            updatePlayerOrder(generateBorrowedPoints = false)
+            true
+        }
+        R.id.generate_borrowed_points -> {
+            updatePlayerOrder(generateBorrowedPoints = true)
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -181,10 +221,47 @@ class LadderActivity : TLActivity() {
         })
     }
 
+    private fun loadUser() {
+        FirebaseAuth.getInstance().currentUser?.let {
+            Client.api.getUser(it.uid).enqueue(object : Callback<User>(this) {
+                override fun onSuccess(data: User) {
+                    isAdmin = data.admin
+                }
+            })
+        }
+    }
+
+    private fun updatePlayerOrder(generateBorrowedPoints: Boolean) {
+        binding.swipeRefreshLayout.isRefreshing = true
+        Client.api.updatePlayerOrder(ladder.ladderId, generateBorrowedPoints, adapter.list).enqueue(object : Callback<List<Player>>(this) {
+            override fun onResponse(call: Call<List<Player>>, response: Response<List<Player>>) {
+                super.onResponse(call, response)
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
+
+            override fun onSuccess(data: List<Player>) {
+                adapter.list = data
+            }
+        })
+    }
+
     private inner class PlayerAdapter : Adapter<Player>(this, R.string.no_players_text) {
         override fun createViewHolder(parent: ViewGroup) = PlayerViewHolder(CardPlayerBinding.inflate(layoutInflater, parent, false))
         override fun bind(viewHolder: RecyclerView.ViewHolder, item: Player) {
             (viewHolder as? PlayerViewHolder)?.bind(item)
+        }
+
+        fun onMove(fromPosition: Int, toPosition: Int) {
+            if (fromPosition < toPosition) {
+                for (i in fromPosition until toPosition) {
+                    Collections.swap(list, i, i + 1)
+                }
+            } else {
+                for (i in fromPosition downTo toPosition + 1) {
+                    Collections.swap(list, i, i - 1)
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition)
         }
 
         private inner class PlayerViewHolder(private val cardBinding: CardPlayerBinding) : RecyclerView.ViewHolder(cardBinding.root) {
@@ -212,38 +289,6 @@ class LadderActivity : TLActivity() {
                             .putExtra(PlayerActivity.ME_EXTRA, me)
                             .putExtra(PlayerActivity.PLAYER_EXTRA, player)
                     )
-                }
-
-                itemView.setOnLongClickListener {
-                    // If the user is part of the ladder, we can shortcut if we know they aren't an admin
-                    if (me?.user?.admin != false && FirebaseAuth.getInstance().currentUser != null) {
-                        val alertBinding = DialogUpdatePlayerBinding.inflate(layoutInflater, null, false)
-                        val editText = alertBinding.editText
-                        AlertDialog.Builder(this@LadderActivity)
-                            .setTitle(R.string.player_update_dialog_title)
-                            .setMessage(R.string.player_update_dialog_message)
-                            .setView(alertBinding.root)
-                            .setPositiveButton(android.R.string.ok) { _, _ ->
-                                editText.text.toString().toIntOrNull()?.let { newBorrowedPoints ->
-                                    val newPlayer = player.copy(borrowedPoints = newBorrowedPoints)
-                                    binding.swipeRefreshLayout.isRefreshing = true
-                                    Client.api.updatePlayer(ladder.ladderId, player.user.userId, newPlayer).enqueue(object : Callback<List<Player>>(this@LadderActivity) {
-                                        override fun onResponse(call: Call<List<Player>>, response: Response<List<Player>>) {
-                                            super.onResponse(call, response)
-                                            binding.swipeRefreshLayout.isRefreshing = false
-                                        }
-
-                                        override fun onSuccess(data: List<Player>) {
-                                            loadBottomButton()
-                                            adapter.list = data
-                                        }
-                                    })
-                                }
-                            }
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .show()
-                        true
-                    } else false
                 }
             }
         }

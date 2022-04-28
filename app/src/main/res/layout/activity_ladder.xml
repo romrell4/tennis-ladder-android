@@ -47,6 +47,7 @@
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/card_player" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

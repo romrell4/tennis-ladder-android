@@ -2,8 +2,11 @@ package com.romrell4.tennisladder.controller
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
+import android.webkit.WebView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,9 +30,6 @@ private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 class MainActivity : TLActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private var logInMenuItem: MenuItem? = null
-    private var logOutMenuItem: MenuItem? = null
-    private var profileMenuItem: MenuItem? = null
     private val adapter = LadderAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,9 +45,6 @@ class MainActivity : TLActivity() {
                 binding.drawerLayout.closeDrawers()
                 onOptionsItemSelected(it)
             }
-            menu.findItem(R.id.nav_menu_login)?.let { logInMenuItem = it }
-            menu.findItem(R.id.nav_menu_logout)?.let { logOutMenuItem = it }
-            menu.findItem(R.id.nav_menu_profile)?.let { profileMenuItem = it }
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -65,6 +62,11 @@ class MainActivity : TLActivity() {
         } ?: run {
             onLoggedOut()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
@@ -89,6 +91,16 @@ class MainActivity : TLActivity() {
                         .putExtra(ProfileActivity.USER_ID_EXTRA, it)
                 )
             }
+            true
+        }
+        R.id.rules -> {
+            val webView = WebView(this)
+            webView.loadUrl("https://romrell4.github.io/tennis-ladder-ws/rules.html")
+
+            AlertDialog.Builder(this)
+                .setView(webView)
+                .setNeutralButton(android.R.string.ok, null)
+                .show()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -117,9 +129,13 @@ class MainActivity : TLActivity() {
     }
 
     private fun onLoggedIn() {
-        logInMenuItem?.isVisible = false
-        logOutMenuItem?.isVisible = true
-        profileMenuItem?.isVisible = true
+        binding.root.post {
+            binding.navView.menu.run {
+                findItem(R.id.nav_menu_login).isVisible = false
+                findItem(R.id.nav_menu_logout).isVisible = true
+                findItem(R.id.nav_menu_profile).isVisible = true
+            }
+        }
 
         FirebaseAuth.getInstance().currentUser?.displayName.let {
             val text = getString(R.string.logged_in_text, it)
@@ -129,9 +145,13 @@ class MainActivity : TLActivity() {
     }
 
     private fun onLoggedOut() {
-        logInMenuItem?.isVisible = true
-        logOutMenuItem?.isVisible = false
-        profileMenuItem?.isVisible = false
+        binding.root.post {
+            binding.navView.menu.run {
+                findItem(R.id.nav_menu_login).isVisible = true
+                findItem(R.id.nav_menu_logout).isVisible = false
+                findItem(R.id.nav_menu_profile).isVisible = false
+            }
+        }
 
         val text = getString(R.string.not_logged_in)
         supportActionBar?.subtitle = text
