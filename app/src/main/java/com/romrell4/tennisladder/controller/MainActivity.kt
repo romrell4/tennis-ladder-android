@@ -50,6 +50,8 @@ class MainActivity : TLActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
+        binding.swipeRefreshLayout.setOnRefreshListener { loadLadders() }
+
         loadLadders()
     }
 
@@ -123,6 +125,7 @@ class MainActivity : TLActivity() {
         Client.api.getLadders().enqueue(object : Callback<List<Ladder>>(this) {
             override fun onSuccess(data: List<Ladder>) {
                 binding.viewSwitcher.displayedChild = VS_LIST_INDEX
+                binding.swipeRefreshLayout.isRefreshing = false
                 adapter.list = data
             }
         })
