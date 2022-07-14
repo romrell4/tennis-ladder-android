@@ -41,15 +41,11 @@ class LadderActivity : TLActivity() {
     private lateinit var ladder: Ladder
     private val me: Player?
         get() = adapter.list.firstOrNull { FirebaseAuth.getInstance().currentUser?.uid == it.user.userId }
-    private var isAdmin = false
-        set(value) {
-            field = value
-            invalidateOptionsMenu()
-        }
+
     private val adapter = PlayerAdapter()
     private val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.START or ItemTouchHelper.END) {
-        override fun isLongPressDragEnabled() = isAdmin && ladder.startDate.after(Date())
-        override fun isItemViewSwipeEnabled() = isAdmin && ladder.startDate.before(Date())
+        override fun isLongPressDragEnabled() = ladder.loggedInUserIsAdmin && ladder.startDate.after(Date())
+        override fun isItemViewSwipeEnabled() = ladder.loggedInUserIsAdmin && ladder.startDate.before(Date())
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
             adapter.onMove(viewHolder.bindingAdapterPosition, target.bindingAdapterPosition)
@@ -99,11 +95,10 @@ class LadderActivity : TLActivity() {
         binding.recyclerView.adapter = adapter
         touchHelper.attachToRecyclerView(binding.recyclerView)
         loadPlayers()
-        loadUser()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (isAdmin) {
+        if (ladder.loggedInUserIsAdmin) {
             menuInflater.inflate(R.menu.ladders_menu, menu)
         }
         return super.onCreateOptionsMenu(menu)
@@ -221,16 +216,6 @@ class LadderActivity : TLActivity() {
         })
     }
 
-    private fun loadUser() {
-        FirebaseAuth.getInstance().currentUser?.let {
-            Client.api.getUser(it.uid).enqueue(object : Callback<User>(this) {
-                override fun onSuccess(data: User) {
-                    isAdmin = data.admin
-                }
-            })
-        }
-    }
-
     private fun updatePlayerOrder(generateBorrowedPoints: Boolean) {
         binding.swipeRefreshLayout.isRefreshing = true
         Client.api.updatePlayerOrder(ladder.ladderId, generateBorrowedPoints, adapter.list).enqueue(object : Callback<List<Player>>(this) {
@@ -288,6 +273,7 @@ class LadderActivity : TLActivity() {
                         Intent(this@LadderActivity, PlayerActivity::class.java)
                             .putExtra(PlayerActivity.ME_EXTRA, me)
                             .putExtra(PlayerActivity.PLAYER_EXTRA, player)
+                            .putExtra(PlayerActivity.IS_ADMIN, ladder.loggedInUserIsAdmin)
                     )
                 }
             }

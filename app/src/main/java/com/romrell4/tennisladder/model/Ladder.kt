@@ -9,5 +9,6 @@ data class Ladder(
 	val ladderId: Int,
 	val name: String,
 	val startDate: Date,
-	val endDate: Date
+	val endDate: Date,
+	val loggedInUserIsAdmin: Boolean,
 ): Parcelable

@@ -18,6 +18,7 @@ import com.romrell4.tennisladder.databinding.CardMatchBinding
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
+import com.romrell4.tennisladder.model.ServerError
 import com.romrell4.tennisladder.support.*
 import com.squareup.picasso.Picasso
 import okhttp3.ResponseBody
@@ -32,12 +33,14 @@ class PlayerActivity : TLActivity() {
     companion object {
         const val ME_EXTRA = "me"
         const val PLAYER_EXTRA = "player"
+        const val IS_ADMIN = "isAdmin"
     }
 
     private lateinit var binding: ActivityPlayerBinding
 
     private var me: Player? = null
     private lateinit var player: Player
+    private var isAdmin: Boolean = false
     private val adapter = MatchAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +49,7 @@ class PlayerActivity : TLActivity() {
 
         me = intent.getExtra(ME_EXTRA)
         player = intent.requireExtra(PLAYER_EXTRA)
+        isAdmin = intent.requireExtra(IS_ADMIN)
 
         Picasso.get().load(player.user.photoUrl).placeholder(R.drawable.ic_default_user).into(binding.imageView)
 
@@ -164,7 +168,7 @@ class PlayerActivity : TLActivity() {
                         if (match.winner == player) R.color.matchWinner else R.color.matchLoser
                     )
                 )
-                if (me?.user?.admin != false) {
+                if (isAdmin) {
                     itemView.setOnClickListener {
                         AlertDialog.Builder(this@PlayerActivity)
                             .setTitle(R.string.match_options_title)
@@ -200,6 +204,11 @@ class PlayerActivity : TLActivity() {
                                     if (index == absoluteAdapterPosition) data else match
                                 }
                             }
+
+                            override fun onError(error: ServerError?, t: Throwable) {
+                                binding.viewSwitcher.displayedChild = VS_LIST_INDEX
+                                super.onError(error, t)
+                            }
                         })
                     }
                     .setNegativeButton(android.R.string.cancel, null)
@@ -212,6 +221,11 @@ class PlayerActivity : TLActivity() {
                     override fun onSuccess(data: ResponseBody) {
                         binding.viewSwitcher.displayedChild = VS_LIST_INDEX
                         adapter.list = adapter.list.filterIndexed { index, _ -> index != absoluteAdapterPosition }
+                    }
+
+                    override fun onError(error: ServerError?, t: Throwable) {
+                        binding.viewSwitcher.displayedChild = VS_LIST_INDEX
+                        super.onError(error, t)
                     }
                 })
             }
