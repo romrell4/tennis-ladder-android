@@ -162,12 +162,10 @@ class PlayerActivity : TLActivity() {
                 cardBinding.nameText.text = listOf(match.winner, match.loser).first { it != player }.user.name
                 cardBinding.dateText.text = MATCH_DATE_FORMAT.format(match.matchDate)
                 cardBinding.scoreText.text = match.scoreText(player)
-                cardBinding.scoreText.setTextColor(
-                    ContextCompat.getColor(
-                        this@PlayerActivity,
-                        if (match.winner == player) R.color.matchWinner else R.color.matchLoser
-                    )
-                )
+                cardBinding.earnedPointsText.text = getString(R.string.match_earned_points_format, match.earnedPoints(player))
+                val color = ContextCompat.getColor(this@PlayerActivity, if (match.winner == player) R.color.matchWinner else R.color.matchLoser)
+                cardBinding.scoreText.setTextColor(color)
+                cardBinding.earnedPointsText.setTextColor(color)
                 if (isAdmin) {
                     itemView.setOnClickListener {
                         AlertDialog.Builder(this@PlayerActivity)

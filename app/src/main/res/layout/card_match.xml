@@ -30,20 +30,6 @@
             tools:text="Player Name" />
 
         <TextView
-            android:id="@+id/score_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="6-1, 6-7, 7-6" />
-
-        <TextView
             android:id="@+id/date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,5 +40,29 @@
             app:layout_constraintStart_toStartOf="@+id/name_text"
             app:layout_constraintTop_toBottomOf="@+id/name_text"
             tools:text="Date" />
+
+        <TextView
+            android:id="@+id/score_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/name_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name_text"
+            tools:text="6-1, 6-7, 7-6" />
+
+        <TextView
+            android:id="@+id/earned_points_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/date_text"
+            app:layout_constraintEnd_toEndOf="@id/score_text"
+            app:layout_constraintTop_toTopOf="@id/date_text"
+            tools:text="Earned points: 22" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
