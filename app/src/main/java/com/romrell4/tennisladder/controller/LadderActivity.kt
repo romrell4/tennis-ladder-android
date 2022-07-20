@@ -253,6 +253,7 @@ class LadderActivity : TLActivity() {
 
             fun bind(player: Player) {
                 cardBinding.nameText.text = player.user.name
+                cardBinding.rankingText.text = getString(R.string.player_cell_ranking_text_format, player.ranking)
                 if (player.borrowedPoints == 0) {
                     cardBinding.earnedPoints.visibility = View.GONE
                     cardBinding.borrowedPoints.visibility = View.GONE
