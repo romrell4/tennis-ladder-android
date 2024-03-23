@@ -26,6 +26,7 @@ open class TLActivity: AppCompatActivity() {
 			AuthUI.getInstance().createSignInIntentBuilder()
 				.setLogo(R.drawable.ic_tennis_ladder)
 				.setIsSmartLockEnabled(!BuildConfig.DEBUG)
+				.setTheme(R.style.AppTheme)
 				.setAvailableProviders(listOf(
 					AuthUI.IdpConfig.GoogleBuilder(),
 					AuthUI.IdpConfig.EmailBuilder()
