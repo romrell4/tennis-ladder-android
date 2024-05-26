@@ -38,7 +38,7 @@ class ProfileActivity : TLActivity() {
             field = value
             value?.let {
                 title = it.name
-                Picasso.get().load(it.photoUrl).placeholder(R.drawable.ic_default_user).into(binding.imageView)
+                Picasso.get().load(it.photoUrl?.takeIf { it.isNotBlank() }).placeholder(R.drawable.ic_default_user).into(binding.imageView)
                 adapter.list = listOf(
                     RowData("Email", it.email) { email ->
                         user?.email = email
