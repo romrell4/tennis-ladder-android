@@ -2,7 +2,10 @@ package com.romrell4.tennisladder.support
 
 import android.annotation.SuppressLint
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat.Type
 import com.firebase.ui.auth.AuthUI
 import com.romrell4.tennisladder.BuildConfig
 import com.romrell4.tennisladder.R
@@ -19,6 +22,18 @@ open class TLActivity: AppCompatActivity() {
 	override fun setContentView(view: View) {
 		setSupportActionBar(view.findViewById(R.id.toolbar))
 		super.setContentView(view)
+
+		view.findViewById<View>(R.id.status_bar_background)?.let { statusBarBackground ->
+			// Programmatically set the height of the status bar background to match the system insets
+			ViewCompat.setOnApplyWindowInsetsListener(statusBarBackground) { v, insets ->
+				val statusBarHeight = insets.getInsets(Type.statusBars()).top
+				v.layoutParams = ViewGroup.LayoutParams(
+					ViewGroup.LayoutParams.MATCH_PARENT,
+					statusBarHeight
+				)
+				insets
+			}
+		}
 	}
 
 	fun startLoginActivity() {

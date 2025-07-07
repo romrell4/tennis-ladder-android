@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.romrell4.tennisladder"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.romrell4.tennisladder"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 31
         versionName = "3.1"
 
