@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.AuthUI
@@ -44,6 +47,12 @@ class MainActivity : TLActivity() {
             setNavigationItemSelectedListener {
                 binding.drawerLayout.closeDrawers()
                 onOptionsItemSelected(it)
+            }
+            // Programmatically set the inset padding of the header view to match the system insets
+            ViewCompat.setOnApplyWindowInsetsListener(getHeaderView(0)) { v, insets ->
+                val statusBarHeight = insets.getInsets(Type.statusBars()).top
+                v.setPadding(v.paddingLeft, statusBarHeight, v.paddingRight, v.paddingBottom)
+                WindowInsetsCompat.CONSUMED
             }
         }
 

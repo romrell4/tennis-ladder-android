@@ -13,7 +13,7 @@ android {
         applicationId = "com.romrell4.tennisladder"
         minSdk = 21
         targetSdk = 36
-        versionCode = 32
+        versionCode = 33
         versionName = "3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
