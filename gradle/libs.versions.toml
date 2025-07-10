@@ -1,6 +1,6 @@
 [versions]
 activity = "1.8.2"
-agp = "8.3.1"
+agp = "8.11.0"
 appcompat = "1.6.1"
 constraintlayout = "2.1.4"
 converterGson = "2.10.0"
