@@ -34,6 +34,14 @@ open class TLActivity: AppCompatActivity() {
 				insets
 			}
 		}
+
+		ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+			// Apply the padding to account for the navigation bars
+			v.setPadding(
+				0, 0, 0, insets.getInsets(Type.navigationBars()).bottom
+			)
+			insets
+		}
 	}
 
 	fun startLoginActivity() {
