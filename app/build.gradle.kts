@@ -40,9 +40,11 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.lifecycle.viewmodel.android)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.converter.gson)
     implementation(libs.firebase.ui.auth)

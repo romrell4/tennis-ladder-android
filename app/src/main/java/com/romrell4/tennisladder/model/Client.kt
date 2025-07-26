@@ -58,7 +58,7 @@ class Client {
 		fun updateUser(@Path("user_id") userId: String, @Body user: User): Call<User>
 
 		@GET("ladders")
-		fun getLadders(): Call<List<Ladder>>
+		suspend fun getLadders(): List<Ladder>
 
 		@GET("ladders/{ladder_id}/players")
 		fun getPlayers(@Path("ladder_id") ladderId: Int): Call<List<Player>>

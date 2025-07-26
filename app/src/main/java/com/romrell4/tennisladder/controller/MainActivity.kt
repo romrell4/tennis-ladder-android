@@ -6,11 +6,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.AuthUI
@@ -21,19 +24,21 @@ import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.databinding.ActivityMainBinding
 import com.romrell4.tennisladder.databinding.CardLadderBinding
 import com.romrell4.tennisladder.databinding.NavHeaderBinding
-import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
-import com.romrell4.tennisladder.support.*
+import com.romrell4.tennisladder.support.Adapter
+import com.romrell4.tennisladder.support.TLActivity
+import com.romrell4.tennisladder.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
-private const val VS_LIST_INDEX = 1
 private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 
 class MainActivity : TLActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val adapter = LadderAdapter()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +64,25 @@ class MainActivity : TLActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        binding.swipeRefreshLayout.setOnRefreshListener { loadLadders() }
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.loadLadders() }
 
-        loadLadders()
+        // Collect flows from the ViewModel
+        lifecycleScope.launch {
+            viewModel.viewState.collect { viewState ->
+                binding.viewSwitcher.displayedChild = viewState.viewSwitcherIndex
+                binding.swipeRefreshLayout.isRefreshing = viewState.swipeLoadingDisplayed
+                adapter.list = viewState.ladders
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.commandFlow.collect {
+                when (it) {
+                    is MainViewModel.Command.ShowToast -> {
+                        Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -128,16 +149,6 @@ class MainActivity : TLActivity() {
                 println("Failed login with error code: ${response?.error?.errorCode}")
             }
         }
-    }
-
-    private fun loadLadders() {
-        Client.api.getLadders().enqueue(object : Callback<List<Ladder>>(this) {
-            override fun onSuccess(data: List<Ladder>) {
-                binding.viewSwitcher.displayedChild = VS_LIST_INDEX
-                binding.swipeRefreshLayout.isRefreshing = false
-                adapter.list = data
-            }
-        })
     }
 
     private fun onLoggedIn() {
