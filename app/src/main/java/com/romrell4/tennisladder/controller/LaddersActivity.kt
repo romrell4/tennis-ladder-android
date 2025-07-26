@@ -27,18 +27,18 @@ import com.romrell4.tennisladder.databinding.NavHeaderBinding
 import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.support.Adapter
 import com.romrell4.tennisladder.support.TLActivity
-import com.romrell4.tennisladder.viewmodel.MainViewModel
+import com.romrell4.tennisladder.viewmodel.LaddersViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 private val DATE_FORMAT = SimpleDateFormat("M/d/yyyy", Locale.US)
 
-class MainActivity : TLActivity() {
+class LaddersActivity : TLActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val adapter = LadderAdapter()
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: LaddersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +77,8 @@ class MainActivity : TLActivity() {
         lifecycleScope.launch {
             viewModel.commandFlow.collect {
                 when (it) {
-                    is MainViewModel.Command.ShowToast -> {
-                        Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_LONG).show()
+                    is LaddersViewModel.Command.ShowToast -> {
+                        Toast.makeText(this@LaddersActivity, it.message, Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -138,6 +138,7 @@ class MainActivity : TLActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -193,7 +194,7 @@ class MainActivity : TLActivity() {
                 cardBinding.nameText.text = ladder.name
                 cardBinding.dateText.text = getString(R.string.date_format, DATE_FORMAT.format(ladder.startDate), DATE_FORMAT.format(ladder.endDate))
                 itemView.setOnClickListener {
-                    startActivity(Intent(this@MainActivity, LadderActivity::class.java).putExtra(LadderActivity.LADDER_EXTRA, ladder))
+                    startActivity(Intent(this@LaddersActivity, LadderActivity::class.java).putExtra(LadderActivity.LADDER_EXTRA, ladder))
                 }
             }
         }
