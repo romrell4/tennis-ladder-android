@@ -1,5 +1,6 @@
 package com.romrell4.tennisladder.model
 
+import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.FieldNamingPolicy
@@ -31,15 +32,25 @@ class Client {
 						.addInterceptor { chain ->
 							val requestBuilder = chain.request().newBuilder()
 
-							//If the user is logged in, attach a token to the request
-							FirebaseAuth.getInstance().currentUser?.let { user ->
-								Tasks.await(user.getIdToken(true)).token?.let {
-									//This line will allow you to view and copy the token, for debug purposes
-//									println(it)
-									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
-								} ?: throw Exception("Unable to retrieve token")
-							} ?: run {
-								//If the user isn't logged in, let them call the public endpoints
+							try {
+								//If the user is logged in, attach a token to the request
+								FirebaseAuth.getInstance().currentUser?.let { user ->
+									Tasks.await(user.getIdToken(true)).token?.let {
+										//This line will allow you to view and copy the token, for debug purposes
+//										println(it)
+										chain.proceed(
+											requestBuilder.addHeader(
+												"X-Firebase-Token",
+												it
+											).build()
+										)
+									} ?: throw Exception("Unable to retrieve token")
+								} ?: run {
+									//If the user isn't logged in, let them call the public endpoints
+									chain.proceed(requestBuilder.build())
+								}
+							} catch (e: Exception) {
+								Log.w("AuthInterceptor", "Failed to get Firebase ID token", e)
 								chain.proceed(requestBuilder.build())
 							}
 						}

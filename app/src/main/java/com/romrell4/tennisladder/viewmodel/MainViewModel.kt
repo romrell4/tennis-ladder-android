@@ -3,7 +3,8 @@ package com.romrell4.tennisladder.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romrell4.tennisladder.model.Ladder
-import com.romrell4.tennisladder.repository.LadderRepository
+import com.romrell4.tennisladder.repository.Repository
+import com.romrell4.tennisladder.support.readableMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    private val repository = LadderRepository()
+    private val repository = Repository()
 
     private val _commandFlow = MutableSharedFlow<Command>()
     val commandFlow = _commandFlow.asSharedFlow()
@@ -40,7 +41,7 @@ class MainViewModel : ViewModel() {
                     )
                 }
             }.onFailure {
-                _commandFlow.emit(Command.ShowToast(it.message ?: "An error occurred"))
+                _commandFlow.emit(Command.ShowToast(it.readableMessage()))
             }
         }
     }
