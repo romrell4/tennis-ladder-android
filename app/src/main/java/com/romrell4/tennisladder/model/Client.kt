@@ -12,7 +12,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 class Client {
 	companion object {
@@ -72,16 +78,24 @@ class Client {
 		suspend fun getLadders(): List<Ladder>
 
 		@GET("ladders/{ladder_id}/players")
-		fun getPlayers(@Path("ladder_id") ladderId: Int): Call<List<Player>>
+		suspend fun getPlayers(@Path("ladder_id") ladderId: Int): List<Player>
 
 		@POST("ladders/{ladder_id}/players")
-		fun addPlayerToLadder(@Path("ladder_id") ladderId: Int, @Query("code") code: String): Call<List<Player>>
+		suspend fun addPlayerToLadder(
+			@Path("ladder_id") ladderId: Int, @Query("code") code: String
+		): List<Player>
 
 		@PUT("ladders/{ladder_id}/players")
-		fun updatePlayerOrder(@Path("ladder_id") ladderId: Int, @Query("generate_borrowed_points") generateBorrowedPoints: Boolean, @Body players: List<Player>): Call<List<Player>>
+		suspend fun updatePlayerOrder(
+			@Path("ladder_id") ladderId: Int,
+			@Query("generate_borrowed_points") generateBorrowedPoints: Boolean,
+			@Body players: List<Player>
+		): List<Player>
 
 		@PUT("ladders/{ladder_id}/players/{user_id}")
-		fun updatePlayer(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String, @Body player: Player): Call<List<Player>>
+		suspend fun updatePlayer(
+			@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String, @Body player: Player
+		): List<Player>
 
 		@GET("ladders/{ladder_id}/players/{user_id}/matches")
 		fun getMatches(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String): Call<List<Match>>

@@ -33,25 +33,23 @@ class LaddersViewModel : ViewModel() {
     fun loadLadders() {
         viewModelScope.launch(Dispatchers.IO) {
             state.update { it.copy(isLoading = true) }
-            repository.getLadders().also { result ->
-                state.update {
-                    it.copy(
-                        loadLaddersOp = result,
-                        isLoading = false
-                    )
+            repository.getLadders()
+                .also { state.update { it.copy(isLoading = false) } }
+                .onSuccess { ladders ->
+                    state.update { it.copy(ladders = ladders) }
                 }
-            }.onFailure {
-                _commandFlow.emit(Command.ShowToast(it.readableMessage()))
-            }
+                .onFailure {
+                    _commandFlow.emit(Command.ShowToast(it.readableMessage()))
+                }
         }
     }
 
     private data class State(
-        val loadLaddersOp: Result<List<Ladder>> = Result.success(emptyList()),
+        val ladders: List<Ladder> = emptyList(),
         val isLoading: Boolean = true,
     ) {
         fun toViewState(): LaddersViewState {
-            val ladders = loadLaddersOp.getOrDefault(emptyList())
+            val ladders = ladders
             return LaddersViewState(
                 ladders = ladders,
                 viewSwitcherIndex = if (isLoading && ladders.isEmpty()) 0 else 1,

@@ -4,13 +4,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
+import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.model.ServerError
 import retrofit2.HttpException
 
 class Repository {
-    suspend fun getLadders(): Result<List<Ladder>> = try {
-        val ladders = Client.api.getLadders()
-        Result.success(ladders)
+    private inline fun <T> execute(block: () -> T): Result<T> = try {
+        Result.success(block())
     } catch (e: Exception) {
         if (e is HttpException) {
             val body = e.response()?.errorBody()?.string()
@@ -22,6 +22,28 @@ class Repository {
             )
         } else Result.failure(e)
     }
+
+    suspend fun getLadders(): Result<List<Ladder>> = execute { Client.api.getLadders() }
+
+    suspend fun getPlayers(ladderId: Int): Result<List<Player>> =
+        execute { Client.api.getPlayers(ladderId) }
+
+    suspend fun updatePlayerOrder(
+        ladderId: Int,
+        generateBorrowedPoints: Boolean,
+        players: List<Player>
+    ): Result<List<Player>> = execute {
+        Client.api.updatePlayerOrder(ladderId, generateBorrowedPoints, players)
+    }
+
+    suspend fun addPlayerToLadder(ladderId: Int, code: String): Result<List<Player>> = execute {
+        Client.api.addPlayerToLadder(ladderId, code)
+    }
+
+    suspend fun updatePlayer(ladderId: Int, userId: String, player: Player): Result<List<Player>> =
+        execute {
+            Client.api.updatePlayer(ladderId, userId, player)
+        }
 
     private inline fun <reified T> Gson.fromJson(json: String?): T =
         this.fromJson(json, object : TypeToken<T>() {}.type)
