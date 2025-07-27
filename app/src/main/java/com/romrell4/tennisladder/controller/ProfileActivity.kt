@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import com.romrell4.tennisladder.databinding.CardProfileInfoBinding
 import com.romrell4.tennisladder.databinding.DialogProfileEditValueBinding
 import com.romrell4.tennisladder.support.*
 import com.romrell4.tennisladder.viewmodel.ProfileViewModel
+import com.romrell4.tennisladder.viewmodel.ProfileViewState
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
