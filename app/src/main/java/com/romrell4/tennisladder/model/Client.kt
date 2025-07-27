@@ -69,10 +69,10 @@ class Client {
 
 	interface Api {
 		@GET("users/{user_id}")
-		fun getUser(@Path("user_id") userId: String): Call<User>
+		suspend fun getUser(@Path("user_id") userId: String): User
 
 		@PUT("users/{user_id}")
-		fun updateUser(@Path("user_id") userId: String, @Body user: User): Call<User>
+		suspend fun updateUser(@Path("user_id") userId: String, @Body user: User): User
 
 		@GET("ladders")
 		suspend fun getLadders(): List<Ladder>

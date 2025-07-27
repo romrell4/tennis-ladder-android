@@ -7,6 +7,7 @@ import com.romrell4.tennisladder.model.Ladder
 import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.model.ServerError
+import com.romrell4.tennisladder.model.User
 import retrofit2.HttpException
 
 class Repository {
@@ -48,6 +49,14 @@ class Repository {
 
     suspend fun reportMatch(ladderId: Int, match: Match): Result<Match> = execute {
         Client.api.reportMatch(ladderId, match)
+    }
+
+    suspend fun getUser(userId: String): Result<User> = execute {
+        Client.api.getUser(userId)
+    }
+
+    suspend fun updateUser(userId: String, user: User): Result<User> = execute {
+        Client.api.updateUser(userId, user)
     }
 
     private inline fun <reified T> Gson.fromJson(json: String?): T =

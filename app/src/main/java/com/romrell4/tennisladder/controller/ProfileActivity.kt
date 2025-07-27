@@ -6,18 +6,22 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romrell4.tennisladder.R
 import com.romrell4.tennisladder.databinding.ActivityProfileBinding
 import com.romrell4.tennisladder.databinding.CardProfileInfoBinding
 import com.romrell4.tennisladder.databinding.DialogProfileEditValueBinding
-import com.romrell4.tennisladder.model.Client
-import com.romrell4.tennisladder.model.User
 import com.romrell4.tennisladder.support.*
+import com.romrell4.tennisladder.viewmodel.ProfileViewModel
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.launch
 
 private const val VS_SPINNER_INDEX = 0
 private const val VS_LIST_INDEX = 1
@@ -29,66 +33,80 @@ class ProfileActivity : TLActivity() {
     }
 
     private lateinit var binding: ActivityProfileBinding
-
-    private val editable
-        get() = intent.getExtra<String>(MY_ID_EXTRA) == intent.getExtra<String>(USER_ID_EXTRA)
-
-    private var user: User? = null
-        set(value) {
-            field = value
-            value?.let {
-                title = it.name
-                Picasso.get().load(it.photoUrl?.takeIf { it.isNotBlank() }).placeholder(R.drawable.ic_default_user).into(binding.imageView)
-                adapter.list = listOf(
-                    RowData("Email", it.email) { email ->
-                        user?.email = email
-                    },
-                    RowData("Name", it.name) { name ->
-                        user?.name = name
-                    },
-                    RowData("Phone Number", it.phoneNumber) { phoneNumber ->
-                        user?.phoneNumber = phoneNumber
-                    },
-                    RowData("Availability", it.availabilityText) { availabilityText ->
-                        user?.availabilityText = availabilityText
-                    }
-                )
+    private val viewModel: ProfileViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return ProfileViewModel(
+                    myUserId = intent.getExtra(MY_ID_EXTRA),
+                    profileUserId = intent.requireExtra(USER_ID_EXTRA)
+                ) as T
             }
         }
+    }
+
     private val adapter = ProfileInfoAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ActivityProfileBinding.inflate(layoutInflater).also { binding = it }.root)
 
-        //Configure the view differently if they're looking at their own profile
-        if (editable) {
-            binding.headerText.visibility = View.VISIBLE
-            binding.imageView.setOnClickListener {
-                showEditDialog("Photo URL") { photoUrl ->
-                    //If they didn't add a URL, default to null
-                    photoUrl.takeIf { it.isNotBlank() }.let {
-                        user?.photoUrl = photoUrl
-                        Picasso.get().load(it).placeholder(R.drawable.ic_default_user).into(binding.imageView)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            viewModel.viewState.collect { viewState ->
+                // Update UI based on viewState
+                binding.viewSwitcher.displayedChild = viewState.viewSwitcherIndex
+
+                // Update user-dependent UI
+                title = viewState.userName ?: ""
+                Picasso.get().load(viewState.userPhotoUrl)
+                    .placeholder(R.drawable.ic_default_user)
+                    .into(binding.imageView)
+
+                // Configure editable mode
+                binding.headerText.isVisible = viewState.isEditable
+                if (viewState.isEditable) {
+                    binding.imageView.setOnClickListener {
+                        showEditDialog(ProfileViewState.FieldType.PhotoUrl.label) { photoUrl ->
+                            viewModel.updateUserField(ProfileViewState.FieldType.PhotoUrl, photoUrl)
+                        }
+                    }
+                } else {
+                    binding.imageView.setOnClickListener(null)
+                }
+
+                // Update adapter with profile rows
+                adapter.list = viewState.profileRows
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.commandFlow.collect { command ->
+                when (command) {
+                    is ProfileViewModel.Command.ShowToast -> {
+                        Toast.makeText(
+                            this@ProfileActivity,
+                            command.message,
+                            command.duration
+                        ).show()
+                    }
+                    is ProfileViewModel.Command.FinishActivity -> {
+                        onBackPressed()
                     }
                 }
             }
         }
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
-
-        Client.api.getUser(intent.requireExtra(USER_ID_EXTRA)).enqueue(object : Callback<User>(this) {
-            override fun onSuccess(data: User) {
-                binding.viewSwitcher.displayedChild = VS_LIST_INDEX
-                user = data
-            }
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        //Only display the save button if the user is looking at their own profile
-        if (editable) {
+        // Only display the save button if the user is looking at their own profile
+        if (viewModel.isEditable) {
             menuInflater.inflate(R.menu.profile_menu, menu)
         }
         return super.onCreateOptionsMenu(menu)
@@ -96,25 +114,11 @@ class ProfileActivity : TLActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.save -> {
-            user?.let {
-                binding.viewSwitcher.displayedChild = VS_SPINNER_INDEX
-                Client.api.updateUser(it.userId, it).enqueue(object : Callback<User>(this) {
-                    override fun onSuccess(data: User) {
-                        Toast.makeText(this@ProfileActivity, "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                        onBackPressed()
-                    }
-                })
-            }
+            viewModel.saveProfile()
             true
         }
         else -> super.onOptionsItemSelected(item)
     }
-
-    private data class RowData(
-        val label: String,
-        var value: String?,
-        val action: (String) -> Unit
-    )
 
     private fun showEditDialog(label: String, action: (String) -> Unit) {
         val alertBinding = DialogProfileEditValueBinding.inflate(layoutInflater, null, false)
@@ -131,26 +135,26 @@ class ProfileActivity : TLActivity() {
             .show()
     }
 
-    private inner class ProfileInfoAdapter : Adapter<RowData>(this, R.string.no_user_text) {
+    private inner class ProfileInfoAdapter : Adapter<ProfileViewState.RowData>(this, R.string.no_user_text) {
         override fun createViewHolder(parent: ViewGroup) = RowViewHolder(CardProfileInfoBinding.inflate(layoutInflater, parent, false))
-        override fun bind(viewHolder: RecyclerView.ViewHolder, item: RowData) {
+        override fun bind(viewHolder: RecyclerView.ViewHolder, item: ProfileViewState.RowData) {
             (viewHolder as? RowViewHolder)?.bind(item)
         }
 
         private inner class RowViewHolder(private val cardBinding: CardProfileInfoBinding) : RecyclerView.ViewHolder(cardBinding.root) {
 
-            fun bind(rowData: RowData) {
+            fun bind(rowData: ProfileViewState.RowData) {
                 cardBinding.labelText.text = rowData.label
                 cardBinding.valueText.text = rowData.value ?: "Tap to set"
                 cardBinding.valueText.setTextColor(ContextCompat.getColor(this@ProfileActivity, if (rowData.value != null) R.color.black else android.R.color.darker_gray))
-                if (editable) {
+                if (viewModel.isEditable) {
                     itemView.setOnClickListener {
-                        showEditDialog(rowData.label) {
-                            rowData.action(it)
-                            list[list.indexOf(rowData)].value = it
-                            notifyDataSetChanged()
+                        showEditDialog(rowData.label) { newValue ->
+                            viewModel.updateUserField(rowData.fieldType, newValue)
                         }
                     }
+                } else {
+                    itemView.setOnClickListener(null)
                 }
             }
         }
