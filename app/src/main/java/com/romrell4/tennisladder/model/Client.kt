@@ -101,7 +101,7 @@ class Client {
 		fun getMatches(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String): Call<List<Match>>
 
 		@POST("ladders/{ladder_id}/matches")
-		fun reportMatch(@Path("ladder_id") ladderId: Int, @Body match: Match): Call<Match>
+		suspend fun reportMatch(@Path("ladder_id") ladderId: Int, @Body match: Match): Match
 
 		@PUT("ladders/{ladder_id}/matches/{match_id}")
 		fun updateMatchScores(@Path("ladder_id") ladderId: Int, @Path("match_id") matchId: Int, @Body match: Match): Call<Match>

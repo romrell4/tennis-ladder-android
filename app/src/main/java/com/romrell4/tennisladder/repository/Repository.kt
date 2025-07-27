@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.romrell4.tennisladder.model.Client
 import com.romrell4.tennisladder.model.Ladder
+import com.romrell4.tennisladder.model.Match
 import com.romrell4.tennisladder.model.Player
 import com.romrell4.tennisladder.model.ServerError
 import retrofit2.HttpException
@@ -44,6 +45,10 @@ class Repository {
         execute {
             Client.api.updatePlayer(ladderId, userId, player)
         }
+
+    suspend fun reportMatch(ladderId: Int, match: Match): Result<Match> = execute {
+        Client.api.reportMatch(ladderId, match)
+    }
 
     private inline fun <reified T> Gson.fromJson(json: String?): T =
         this.fromJson(json, object : TypeToken<T>() {}.type)
