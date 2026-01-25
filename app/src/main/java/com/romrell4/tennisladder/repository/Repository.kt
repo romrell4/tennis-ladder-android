@@ -59,6 +59,10 @@ class Repository {
         Client.api.updateUser(userId, user)
     }
 
+    suspend fun getMatches(ladderId: Int, userId: String): Result<List<Match>> = execute {
+        Client.api.getMatches(ladderId, userId).execute().body()!!
+    }
+
     private inline fun <reified T> Gson.fromJson(json: String?): T =
         this.fromJson(json, object : TypeToken<T>() {}.type)
 }
