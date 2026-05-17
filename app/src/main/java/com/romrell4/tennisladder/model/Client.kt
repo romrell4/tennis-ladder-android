@@ -1,5 +1,6 @@
 package com.romrell4.tennisladder.model
 
+import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.FieldNamingPolicy
@@ -11,7 +12,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 class Client {
 	companion object {
@@ -31,15 +38,25 @@ class Client {
 						.addInterceptor { chain ->
 							val requestBuilder = chain.request().newBuilder()
 
-							//If the user is logged in, attach a token to the request
-							FirebaseAuth.getInstance().currentUser?.let { user ->
-								Tasks.await(user.getIdToken(true)).token?.let {
-									//This line will allow you to view and copy the token, for debug purposes
-//									println(it)
-									chain.proceed(requestBuilder.addHeader("X-Firebase-Token", it).build())
-								} ?: throw Exception("Unable to retrieve token")
-							} ?: run {
-								//If the user isn't logged in, let them call the public endpoints
+							try {
+								//If the user is logged in, attach a token to the request
+								FirebaseAuth.getInstance().currentUser?.let { user ->
+									Tasks.await(user.getIdToken(true)).token?.let {
+										//This line will allow you to view and copy the token, for debug purposes
+//										println(it)
+										chain.proceed(
+											requestBuilder.addHeader(
+												"X-Firebase-Token",
+												it
+											).build()
+										)
+									} ?: throw Exception("Unable to retrieve token")
+								} ?: run {
+									//If the user isn't logged in, let them call the public endpoints
+									chain.proceed(requestBuilder.build())
+								}
+							} catch (e: Exception) {
+								Log.w("AuthInterceptor", "Failed to get Firebase ID token", e)
 								chain.proceed(requestBuilder.build())
 							}
 						}
@@ -52,31 +69,39 @@ class Client {
 
 	interface Api {
 		@GET("users/{user_id}")
-		fun getUser(@Path("user_id") userId: String): Call<User>
+		suspend fun getUser(@Path("user_id") userId: String): User
 
 		@PUT("users/{user_id}")
-		fun updateUser(@Path("user_id") userId: String, @Body user: User): Call<User>
+		suspend fun updateUser(@Path("user_id") userId: String, @Body user: User): User
 
 		@GET("ladders")
-		fun getLadders(): Call<List<Ladder>>
+		suspend fun getLadders(): List<Ladder>
 
 		@GET("ladders/{ladder_id}/players")
-		fun getPlayers(@Path("ladder_id") ladderId: Int): Call<List<Player>>
+		suspend fun getPlayers(@Path("ladder_id") ladderId: Int): List<Player>
 
 		@POST("ladders/{ladder_id}/players")
-		fun addPlayerToLadder(@Path("ladder_id") ladderId: Int, @Query("code") code: String): Call<List<Player>>
+		suspend fun addPlayerToLadder(
+			@Path("ladder_id") ladderId: Int, @Query("code") code: String
+		): List<Player>
 
 		@PUT("ladders/{ladder_id}/players")
-		fun updatePlayerOrder(@Path("ladder_id") ladderId: Int, @Query("generate_borrowed_points") generateBorrowedPoints: Boolean, @Body players: List<Player>): Call<List<Player>>
+		suspend fun updatePlayerOrder(
+			@Path("ladder_id") ladderId: Int,
+			@Query("generate_borrowed_points") generateBorrowedPoints: Boolean,
+			@Body players: List<Player>
+		): List<Player>
 
 		@PUT("ladders/{ladder_id}/players/{user_id}")
-		fun updatePlayer(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String, @Body player: Player): Call<List<Player>>
+		suspend fun updatePlayer(
+			@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String, @Body player: Player
+		): List<Player>
 
 		@GET("ladders/{ladder_id}/players/{user_id}/matches")
 		fun getMatches(@Path("ladder_id") ladderId: Int, @Path("user_id") userId: String): Call<List<Match>>
 
 		@POST("ladders/{ladder_id}/matches")
-		fun reportMatch(@Path("ladder_id") ladderId: Int, @Body match: Match): Call<Match>
+		suspend fun reportMatch(@Path("ladder_id") ladderId: Int, @Body match: Match): Match
 
 		@PUT("ladders/{ladder_id}/matches/{match_id}")
 		fun updateMatchScores(@Path("ladder_id") ladderId: Int, @Path("match_id") matchId: Int, @Body match: Match): Call<Match>
