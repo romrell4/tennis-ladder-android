@@ -1,8 +1,11 @@
 package com.romrell4.tennisladder.controller
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Patterns
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -100,6 +103,7 @@ class LadderActivity : TLActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (ladder.loggedInUserIsAdmin) {
             menuInflater.inflate(R.menu.ladders_menu, menu)
+            menu?.findItem(R.id.email_ladder)?.isEnabled = adapter.list.isNotEmpty()
         }
         return super.onCreateOptionsMenu(menu)
     }
@@ -111,6 +115,10 @@ class LadderActivity : TLActivity() {
         }
         R.id.generate_borrowed_points -> {
             updatePlayerOrder(generateBorrowedPoints = true)
+            true
+        }
+        R.id.email_ladder -> {
+            confirmEmailLadder()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -211,6 +219,7 @@ class LadderActivity : TLActivity() {
                 binding.viewSwitcher.displayedChild = VS_LIST_INDEX
                 binding.swipeRefreshLayout.isRefreshing = false
                 adapter.list = data
+                invalidateOptionsMenu()
                 loadBottomButton()
             }
         })
@@ -228,6 +237,66 @@ class LadderActivity : TLActivity() {
                 adapter.list = data
             }
         })
+    }
+
+    private fun confirmEmailLadder() {
+        val (validPlayerEmails, invalidPlayerEmails) = adapter.list
+            .map { it to it.user.email.trim() }
+            .partition { (_, email) ->
+                email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            }
+        val recipients = validPlayerEmails
+            .map { (_, email) -> email }
+            .distinctBy { it.lowercase(Locale.US) }
+
+        if (recipients.isEmpty()) {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.email_ladder_no_recipients_title)
+                .setMessage(R.string.email_ladder_no_recipients_message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+            return
+        }
+
+        val message = if (invalidPlayerEmails.isEmpty()) {
+            getString(R.string.email_ladder_confirmation_message, recipients.size)
+        } else {
+            val skippedPlayers = invalidPlayerEmails
+                .sortedBy { (player, _) -> player.user.name.lowercase(Locale.getDefault()) }
+                .joinToString("\n") { (player, email) ->
+                    if (email.isEmpty()) {
+                        getString(R.string.email_ladder_missing_email, player.user.name)
+                    } else {
+                        getString(R.string.email_ladder_invalid_email, player.user.name, email)
+                    }
+                }
+            getString(R.string.email_ladder_confirmation_with_skipped_message, recipients.size, skippedPlayers)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.email_ladder_confirmation_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.continue_action) { _, _ -> openEmailComposer(recipients) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun openEmailComposer(recipients: List<String>) {
+        val uri = Uri.Builder()
+            .scheme("mailto")
+            .appendQueryParameter("bcc", recipients.joinToString(","))
+            .appendQueryParameter("subject", getString(R.string.email_ladder_default_subject, ladder.name))
+            .build()
+
+        try {
+            startActivity(Intent(Intent.ACTION_SENDTO, uri))
+        } catch (_: ActivityNotFoundException) {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.email_ladder_no_app_title)
+                .setMessage(R.string.email_ladder_no_app_message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+        }
     }
 
     private inner class PlayerAdapter : Adapter<Player>(this, R.string.no_players_text) {

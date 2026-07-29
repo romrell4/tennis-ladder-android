@@ -5,4 +5,7 @@
 
     <item android:id="@+id/generate_borrowed_points"
         android:title="@string/generate_borrowed_points_menu" />
+
+    <item android:id="@+id/email_ladder"
+        android:title="@string/email_ladder_menu_title" />
 </menu>

@@ -60,4 +60,16 @@
     <string name="match_options_title">What would you like to do with this match?</string>
     <string name="save_player_order_menu_title">Save player positions</string>
     <string name="generate_borrowed_points_menu">Generate borrowed points</string>
+    <string name="email_ladder_menu_title">Email ladder</string>
+    <string name="email_ladder_confirmation_title">Email Ladder</string>
+    <string name="email_ladder_confirmation_message">Compose an email to %1$d recipients?</string>
+    <string name="email_ladder_confirmation_with_skipped_message">Compose an email to %1$d recipients?\n\nThe following players will not be included:\n%2$s</string>
+    <string name="email_ladder_missing_email">• %1$s — missing email address</string>
+    <string name="email_ladder_invalid_email">• %1$s — invalid email address: %2$s</string>
+    <string name="email_ladder_no_recipients_title">No Email Recipients</string>
+    <string name="email_ladder_no_recipients_message">There are no players with valid email addresses in this ladder.</string>
+    <string name="email_ladder_default_subject">%1$s Update</string>
+    <string name="email_ladder_no_app_title">No Email App</string>
+    <string name="email_ladder_no_app_message">Install or enable an email app to email this ladder.</string>
+    <string name="continue_action">Continue</string>
 </resources>
